@@ -46,7 +46,7 @@ public class Main extends JFrame{
 		Robot_bt robt = null;
 		Robot_bt rob_autonome = null;
 		String [] nomRobots = {"Glaedr","Firnen","Thorn","Saphira","Shruikan"};
-		String [] addrRobots = {"00:16:53:1C:15:FC","00:16:53:16:2E:5B","","","00:16:53:1C:19:95"};
+		String [] addrRobots = {"00:16:53:1C:15:FC","00:16:53:16:2E:5B","00:16:53:16:13:88","","00:16:53:1C:19:95"};
 		JComboBox<String> choixTel = new JComboBox<>(nomRobots);
 		
 		
