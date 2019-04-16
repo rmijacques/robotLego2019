@@ -30,8 +30,7 @@ public class GraphePlateau {
 		
 	}
 
-	//TODO : ajouter les demi-tours
-	//TODO : prendre en compte les impasses
+
 	private List<Mouvement> trouverPotos(int h,int l,Case[][] cases,int i,int j){
 		List<Mouvement> mouvPossibles = new ArrayList<>();
 		
@@ -43,96 +42,124 @@ public class GraphePlateau {
 				mouvPossibles.add(new Mouvement("s",Orientation.WEST,cases[i][j-1]));
 			}
 			if(j+1 < l) {
+				mouvPossibles.add(new Mouvement("u",Orientation.WEST,cases[i][j+1]));
 				mouvPossibles.add(new Mouvement("s",Orientation.EAST,cases[i][j+1]));
-				mouvPossibles.add(new Mouvement("u",Orientation.WEST,cases[i][j-1]));
 			}
 			break;
 		case "HB":
 			if(i-1 >= 0) {
-				//TODO : UTUNR
-				mouvPossibles.add(new Mouvement("s",Orientation.NORTH,cases[i -1][j]));
+				mouvPossibles.add(new Mouvement("u",Orientation.SOUTH,cases[i-1][j]));
+				mouvPossibles.add(new Mouvement("s",Orientation.NORTH,cases[i-1][j]));
 			}
 			if(i+1 < h) {
-				
-				mouvPossibles.add(new Mouvement("s",Orientation.SOUTH,cases[i +1][j]));
+				mouvPossibles.add(new Mouvement("u",Orientation.NORTH,cases[i+1][j]));
+				mouvPossibles.add(new Mouvement("s",Orientation.SOUTH,cases[i+1][j]));
 			}
 			break;
 		case "DB":
-			if(j+1 < l)
+			if(j+1 < l) {
+				mouvPossibles.add(new Mouvement("u",Orientation.WEST,cases[i][j+1]));
 				mouvPossibles.add(new Mouvement("r",Orientation.NORTH,cases[i][j+1]));
-			if(i+1 < h)
+			}
+			if(i+1 < h) {
+				mouvPossibles.add(new Mouvement("u",Orientation.NORTH,cases[i+1][j]));
 				mouvPossibles.add(new Mouvement("l",Orientation.WEST,cases[i+1][j]));
+			}
 			break;
 		case "GB":
-			if(j-1 >= 0)
+			if(j-1 >= 0) {
+				mouvPossibles.add(new Mouvement("u",Orientation.EAST,cases[i][j-1]));
 				mouvPossibles.add(new Mouvement("l",Orientation.NORTH,cases[i][j-1]));
-			if(i+1 < h)
+			}
+			if(i+1 < h) {
+				mouvPossibles.add(new Mouvement("u",Orientation.NORTH,cases[i+1][j]));
 				mouvPossibles.add(new Mouvement("r",Orientation.EAST,cases[i+1][j]));
+			}
 			break;
 		case "GDB":
 			if(j-1 >= 0) {
+				mouvPossibles.add(new Mouvement("u",Orientation.EAST,cases[i][j-1]));
 				mouvPossibles.add(new Mouvement("l",Orientation.NORTH,cases[i][j-1]));
 				mouvPossibles.add(new Mouvement("r",Orientation.WEST,cases[i][j-1]));
 			}
 			if(j+1 < l) {
+				mouvPossibles.add(new Mouvement("u",Orientation.WEST,cases[i][j+1]));
 				mouvPossibles.add(new Mouvement("l",Orientation.EAST,cases[i][j+1]));
 				mouvPossibles.add(new Mouvement("r",Orientation.NORTH,cases[i][j+1]));
 			}
 			if(i+1 < h) {
+				mouvPossibles.add(new Mouvement("u",Orientation.NORTH,cases[i+1][j]));
 				mouvPossibles.add(new Mouvement("r",Orientation.EAST,cases[i+1][j]));
 				mouvPossibles.add(new Mouvement("l",Orientation.WEST,cases[i+1][j]));
 			}
 			break;
 		case "GH": 
-			if(j-1 >= 0)
+			if(j-1 >= 0) {
+				mouvPossibles.add(new Mouvement("u",Orientation.EAST,cases[i][j-1]));
 				mouvPossibles.add(new Mouvement("r",Orientation.SOUTH,cases[i][j-1]));
-			if(i-1 >= 0)
+			}
+			if(i-1 >= 0) {
+				mouvPossibles.add(new Mouvement("u",Orientation.SOUTH,cases[i-1][j]));
 				mouvPossibles.add(new Mouvement("l",Orientation.EAST,cases[i-1][j]));
+			}
 			break;
 		case "GHB":
 			if(j-1 >= 0) {
+				mouvPossibles.add(new Mouvement("u",Orientation.EAST,cases[i][j-1]));
 				mouvPossibles.add(new Mouvement("r",Orientation.SOUTH,cases[i][j-1]));
 				mouvPossibles.add(new Mouvement("l",Orientation.NORTH,cases[i][j-1]));
 			}
 			if(i-1 >= 0) {
+				mouvPossibles.add(new Mouvement("u",Orientation.SOUTH,cases[i-1][j]));
 				mouvPossibles.add(new Mouvement("l",Orientation.EAST,cases[i-1][j]));
 				mouvPossibles.add(new Mouvement("r",Orientation.NORTH,cases[i-1][j]));
 			}
 			if(i+1 < h) {
+				mouvPossibles.add(new Mouvement("u",Orientation.NORTH,cases[i+1][j]));
 				mouvPossibles.add(new Mouvement("r",Orientation.EAST,cases[i+1][j]));
 				mouvPossibles.add(new Mouvement("l",Orientation.SOUTH,cases[i+1][j]));
 			}
 			break;
 		case "GHD":
 			if(j-1 >= 0) {
+				mouvPossibles.add(new Mouvement("u",Orientation.EAST,cases[i][j-1]));
 				mouvPossibles.add(new Mouvement("l",Orientation.WEST,cases[i][j-1]));
 				mouvPossibles.add(new Mouvement("r",Orientation.SOUTH,cases[i][j-1]));
 			}
 			if(i-1 >= 0) {
+				mouvPossibles.add(new Mouvement("u",Orientation.SOUTH,cases[i-1][j]));
 				mouvPossibles.add(new Mouvement("l",Orientation.EAST,cases[i-1][j]));
 				mouvPossibles.add(new Mouvement("r",Orientation.WEST,cases[i-1][j]));
 			}
 			if(j+1 < l) {
+				mouvPossibles.add(new Mouvement("u",Orientation.WEST,cases[i][j+1]));
 				mouvPossibles.add(new Mouvement("r",Orientation.EAST,cases[i][j+1]));
 				mouvPossibles.add(new Mouvement("l",Orientation.SOUTH,cases[i][j+1]));
 			}
 			break;
 		case "HD":
-			if(i-1 >= 0)
+			if(i-1 >= 0) {
+				mouvPossibles.add(new Mouvement("u",Orientation.SOUTH,cases[i-1][j]));
 				mouvPossibles.add(new Mouvement("r",Orientation.WEST,cases[i-1][j]));
-			if(j+1 < l)
+			}
+			if(j+1 < l) {
+				mouvPossibles.add(new Mouvement("u",Orientation.WEST,cases[i][j+1]));
 				mouvPossibles.add(new Mouvement("l",Orientation.SOUTH,cases[i][j+1]));
+			}
 			break;
 		case "HDB":
 			if(i-1 >= 0) {
+				mouvPossibles.add(new Mouvement("u",Orientation.SOUTH,cases[i-1][j]));
 				mouvPossibles.add(new Mouvement("l",Orientation.NORTH,cases[i-1][j]));
 				mouvPossibles.add(new Mouvement("r",Orientation.WEST,cases[i-1][j]));
 			}
 			if(j+1 < l) {
+				mouvPossibles.add(new Mouvement("u",Orientation.WEST,cases[i][j+1]));
 				mouvPossibles.add(new Mouvement("l",Orientation.SOUTH,cases[i][j+1]));
 				mouvPossibles.add(new Mouvement("r",Orientation.NORTH,cases[i][j+1]));
 			}
 			if(i+1 < h) {
+				mouvPossibles.add(new Mouvement("u",Orientation.NORTH,cases[i+1][j]));
 				mouvPossibles.add(new Mouvement("r",Orientation.SOUTH,cases[i+1][j]));
 				mouvPossibles.add(new Mouvement("l",Orientation.WEST,cases[i+1][j]));
 			}

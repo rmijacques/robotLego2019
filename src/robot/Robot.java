@@ -46,9 +46,14 @@ public class Robot {
 		if(dest != null) {
 			log.addEvent("Moving...");
 			
+			//On calcule la nouvelle orientation après le mouvement
 			temp = Orientation.nouvOrientApresMouv(direction,command,typeImActuel);
+			
+			//On vérifie que la nouvelle orientation est possible dans la case destination
 			orientPoss = Orientation.typeCasesPourOrient(temp);
+			
 			System.out.println(temp+" "+orientPoss+ dest.getTypeImage());
+			
 			if(orientPoss.contains(dest.getTypeImage())){	
 				robt.setMessage(command);
 				direction = temp;
@@ -77,6 +82,7 @@ public class Robot {
 			c.setPatient("");
 			log.addEvent("Patient récupéré sur la case :"+c.toString());
 			crt.updateCarte(plat);
+			robt.setMessage("t\n");
 		}
 		else
 			log.addEvent("Pas de patients sur la case");
@@ -88,7 +94,7 @@ public class Robot {
 			
 			log.addEvent("Patient déposé à l'hopital");
 			crt.updateCarte(plat);
-			
+			robt.setMessage("d\n");
 			plat.patientSauve(nbVictime);
 			log.addEvent("Il reste "+plat.getNbPatients()+" à sauver !");
 			nbVictime = 0;

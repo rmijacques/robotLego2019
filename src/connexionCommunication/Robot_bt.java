@@ -3,9 +3,7 @@ package connexionCommunication;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+
 
 
 public class Robot_bt {
@@ -68,19 +66,14 @@ public class Robot_bt {
 		}
 		
 		private void listen() throws IOException{
-			byte[] data;
-			int length;
+
 			out="";
 				try {
-//					length = DataIn.readByte() +  DataIn.readByte();
-//					System.out.println(length);
-//					data = new byte [length];
+
 					if(DataIn.available()!=0) {
 						System.out.println(DataIn.readByte());
 						System.out.println("je suis rentre");
 					}
-//					DataIn.read(data);
-//					out = new String(data);
 				} catch (IOException e) {
 					System.out.println("Erreur de lecture.\n");;
 				}
@@ -89,8 +82,6 @@ public class Robot_bt {
 		private void write() {
 			if(dataToWrite())
 				try {
-//					DataOut.writeInt(message.length());
-//					DataOut.writeInt(0);
 					DataOut.writeBytes(message+"\n");
 					DataOut.flush();
 					message = "";
@@ -101,10 +92,6 @@ public class Robot_bt {
 		
 		public void close() {
 			cn.close();
-		}
-		
-		private boolean dataToRead() throws IOException{
-			return DataIn.available()>0;
 		}
 		private boolean dataToWrite() {
 			return message!="";

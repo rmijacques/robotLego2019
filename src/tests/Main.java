@@ -35,7 +35,7 @@ public class Main extends JFrame{
 		Carte carte;
 		GestionRobots gr;
 		Controller ctrl;
-		File fichCarte = new File("./cartesTest/5X5AVECIMPASSES.txt");
+		File fichCarte = new File("./cartesTest/5X5MAPCOMPLEX.txt");
 		Scanner scanCases;
 		Robot_bt robt = new Robot_bt("00:16:53:1C:15:FC", "Glaedr");
 		robt.setMessage("colloc");

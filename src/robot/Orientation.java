@@ -108,8 +108,10 @@ public enum Orientation {
 			ret.add("GDB");
 			ret.add("GHB");
 			ret.add("HDB");
+			ret.add("HB");
 		case SOUTH:
 			ret.add("GH");
+			ret.add("HB");
 			ret.add("HD");
 			ret.add("GHB");
 			ret.add("GHD");

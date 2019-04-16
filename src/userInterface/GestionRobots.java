@@ -36,7 +36,7 @@ public class GestionRobots extends JPanel implements ActionListener{
 		this.controller = controller;
 		scrollPaneConteneurLogs = new JScrollPane(log);
 		scrollPaneConteneurLogs.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPaneConteneurLogs.setPreferredSize(new Dimension(600,700));
+		scrollPaneConteneurLogs.setPreferredSize(new Dimension(600,3));
 		
 		boutonCreerRobot = new JButton("Ajouter un robot");
 		boutonCreerRobot.setActionCommand("nouvRob");
