@@ -35,7 +35,8 @@ public class Main extends JFrame{
 		Carte carte;
 		GestionRobots gr;
 		Controller ctrl;
-		File fichCarte = new File("./cartesTest/5X5MAPCOMPLEX.txt");
+		String nomFich = (String)JOptionPane.showInputDialog(null,"Entrez le fichier de la carte :","Carte",JOptionPane.QUESTION_MESSAGE,null,null,"5X5FATTEST.txt");
+		File fichCarte = new File("./cartesTest/"+nomFich);
 		Scanner scanCases;
 		Robot_bt robt = new Robot_bt("00:16:53:1C:15:FC", "Glaedr");
 		robt.setMessage("colloc");
@@ -69,7 +70,7 @@ public class Main extends JFrame{
 		
 		log = new Logs();
 		plat = new Plateau(height,width,lcases);
-		carte = new Carte(plat);
+		carte = new Carte(plat,log);
 		ctrl= new Controller(log);
 		gr = new GestionRobots(log,ctrl,plat,carte,robt);
 		

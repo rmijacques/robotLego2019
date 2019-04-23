@@ -18,14 +18,16 @@ public class Carte extends JPanel implements ActionListener{
 	private static final long serialVersionUID = 9145081978949472790L;
 	JButton[][] boutonsCarte;
 	Plateau plat;
+	Logs log;
 	
-	public Carte(Plateau plat) {
+	public Carte(Plateau plat,Logs log) {
 		super();
 		this.plat = plat;
 		boutonsCarte = new JButton[plat.getHauteur()][plat.getLargeur()];
 		setMaximumSize(new Dimension(plat.getHauteur()*100,plat.getLargeur()*100));
 		setLayout(new GridLayout(plat.getHauteur(),plat.getLargeur()));
 		fabriquerLaCarte(plat.getCases(),plat.getHauteur(),plat.getLargeur());
+		this.log = log;
 	}
 	
 	public void fabriquerLaCarte(Case[][] cases,int h,int l) {
@@ -35,7 +37,7 @@ public class Carte extends JPanel implements ActionListener{
 		for(int i=0;i<h;i++) {
 			for(int j=0;j<l;j++) {
 				imageCase = new ImageIcon("./imagesCases/"+cases[i][j].getTypeImage()+".png");
-				boutonCase = new BoutonCase(imageCase,i,j);
+				boutonCase = new BoutonCase("",imageCase,i,j);
 				boutonCase.addActionListener(this);
 				boutonCase.setPreferredSize(new Dimension(100,100));
 				boutonsCarte[i][j] = boutonCase;
@@ -56,8 +58,8 @@ public class Carte extends JPanel implements ActionListener{
 		for(int i=0;i<h;i++) {
 			for(int j=0;j<l;j++) {
 				remove(boutonsCarte[i][j]);
-				imageCase = new ImageIcon("./imagesCases/"+cases[i][j].getHopital()+cases[i][j].getPatient()+cases[i][j].getTypeImage()+".png");
-				boutonCase = new BoutonCase(imageCase,i,j);
+				imageCase = new ImageIcon("./imagesCases/"+cases[i][j].getTypeImage()+cases[i][j].getRobot()+".png");
+				boutonCase = new BoutonCase("",imageCase,i,j);
 				boutonCase.addActionListener(this);
 				boutonCase.setPreferredSize(new Dimension(100,100));
 				boutonsCarte[i][j] = boutonCase;
@@ -77,13 +79,17 @@ public class Carte extends JPanel implements ActionListener{
 		if(!c.hasPatient() && !c.hasHopital()) {
 			c.setPatient("patients/");
 			plat.addPatient();;
+			log.addEvent("Patient ajouté sur la case "+c.toStringSimpl());
 		}
 		else if(!c.hasHopital()) {
+			log.addEvent("Patient enlevé sur la case "+c.toStringSimpl());
 			c.setPatient("");
 			plat.patientSauve(1);
 			c.setHopital("hopitaux/");
+			log.addEvent("Hopital ajouté sur la case "+c.toStringSimpl());
 		}
 		else{
+			log.addEvent("Hopital enlevé sur la case "+c.toStringSimpl());
 			c.setHopital("");
 		}
 		System.out.println(plat.getGp().toString());

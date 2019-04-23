@@ -26,6 +26,7 @@ public class Controller extends JPanel implements ActionListener{
 	JButton right;
 	JButton pick;
 	JButton drop;
+	JButton IA;
 	JLabel control;
 	Robot rob;
 	
@@ -43,6 +44,7 @@ public class Controller extends JPanel implements ActionListener{
 		right = new JButton("",new ImageIcon("./imagesDirections/right.png"));
 		pick = new JButton("",new ImageIcon("./imagesDirections/pick.png"));
 		drop = new JButton("",new ImageIcon("./imagesDirections/drop.png"));
+		IA = new JButton("IA");
 		control = new JLabel("Controlle :");
 		
 		up.setPreferredSize(new Dimension(50,50));
@@ -52,6 +54,7 @@ public class Controller extends JPanel implements ActionListener{
 		control.setPreferredSize(new Dimension(50,50));
 		pick.setPreferredSize(new Dimension(50,50));
 		drop.setPreferredSize(new Dimension(50,50));
+		IA.setPreferredSize(new Dimension(50,50));
 		
 		up.setActionCommand("up");
 		right.setActionCommand("right");
@@ -59,6 +62,7 @@ public class Controller extends JPanel implements ActionListener{
 		left.setActionCommand("left");
 		pick.setActionCommand("pick");
 		drop.setActionCommand("drop");
+		IA.setActionCommand("ia");
 		
 		up.addActionListener(this);
 		down.addActionListener(this);
@@ -66,7 +70,7 @@ public class Controller extends JPanel implements ActionListener{
 		right.addActionListener(this);
 		pick.addActionListener(this);
 		drop.addActionListener(this);
-		
+		IA.addActionListener(this);
 		
 		add(Box.createRigidArea(new Dimension(50,50)));
 		add(up);
@@ -85,7 +89,7 @@ public class Controller extends JPanel implements ActionListener{
 		add(Box.createRigidArea(new Dimension(50,50)));
 		
 		add(pick);
-		add(Box.createRigidArea(new Dimension(50,50)));
+		add(IA);
 		add(drop);
 		
 		setVisible(true);
@@ -98,7 +102,6 @@ public class Controller extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
 			case "up":
-				System.out.println("up");
 				log.addEvent("User wants to go STRAIGHT");
 				rob.bouger("s");
 				break;
@@ -122,6 +125,9 @@ public class Controller extends JPanel implements ActionListener{
 				log.addEvent("User wants to DROP a patient");
 				rob.drop();
 				break;
+			case "ia" :
+				log.addEvent("Yehaw");
+				rob.ia();
 			default:
 				;
 			

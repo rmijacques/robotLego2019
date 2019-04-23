@@ -28,15 +28,37 @@ public enum Orientation {
 			}
 			return rightTurn(orient);
 		case "s":
-			return orient;
+			if((typeCase.equals("GH") && orient == SOUTH)|| (typeCase.equals("HD")&& orient == WEST)  
+					|| (typeCase.equals("DB")&& orient == NORTH) || (typeCase.equals("GB")&& orient == EAST))
+				return rightTurn(orient);
+			else if ((typeCase.equals("GH") && orient == EAST)|| (typeCase.equals("HD")&& orient == SOUTH)  
+					|| (typeCase.equals("DB")&& orient == WEST) || (typeCase.equals("GB")&& orient == NORTH))
+				return leftTurn(orient);
+				return orient;
 		case "u":
-			return UTurn(orient);
+			return UTurn(orient,typeCase);
 		default :
 			return orient;
 		}
 	}
 	
-	public static Orientation UTurn(Orientation orient) {
+	public static Orientation UTurn(Orientation orient,String typeCase) {
+		List<String> tpCasesPoss = new ArrayList<>();
+		for(Orientation o : Orientation.values()) {
+			tpCasesPoss = typeCasesPourOrient(o);
+			if (o != orient) {
+				for(String s : tpCasesPoss) {
+					if(s.equals(typeCase))
+						return o;
+				}
+			}	
+		}
+		return null;
+		
+		
+	}
+	
+	public static Orientation opposite(Orientation orient) {
 		switch(orient) {
 		case EAST:
 			return WEST;
@@ -87,29 +109,23 @@ public enum Orientation {
 		
 		switch(ori){
 		case EAST:
-			ret.add("GB");
+			ret.add("HD");
 			ret.add("GD");
-			ret.add("GH");
+			ret.add("DB");
 			ret.add("GDB");
-			ret.add("GHB");
 			ret.add("GHD");
+			ret.add("HDB");
 			break;
 		case WEST:
-			ret.add("HD");
-			ret.add("GD");
-			ret.add("DB");
-			ret.add("GDB");
-			ret.add("GHD");
-			ret.add("HDB");
-			break;
-		case NORTH:
 			ret.add("GB");
-			ret.add("DB");
+			ret.add("GD");
+			ret.add("GH");
 			ret.add("GDB");
 			ret.add("GHB");
-			ret.add("HDB");
-			ret.add("HB");
-		case SOUTH:
+			ret.add("GHD");
+			break;
+			
+		case NORTH:
 			ret.add("GH");
 			ret.add("HB");
 			ret.add("HD");
@@ -117,6 +133,15 @@ public enum Orientation {
 			ret.add("GHD");
 			ret.add("HDB");
 			break;
+		case SOUTH:
+			ret.add("GB");
+			ret.add("DB");
+			ret.add("GDB");
+			ret.add("GHB");
+			ret.add("HDB");
+			ret.add("HB");
+			break;
+
 		default:
 			break;
 		}

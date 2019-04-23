@@ -47,9 +47,8 @@ public class CreationRobot extends JInternalFrame implements ActionListener{
 		super("Nouveau Robot");
 		Orientation []ori = {Orientation.EAST,Orientation.WEST,Orientation.NORTH,Orientation.SOUTH};
 		JLabel jLBNom = new JLabel("Nom du robot :");
-		JLabel jLBAddr = new JLabel("Addresse BT du robot :");
-		JLabel jLBX = new JLabel("Coordonnée X du robot :");
-		JLabel jLBY = new JLabel("Coordonnée Y du robot :");
+		JLabel jLBX = new JLabel("Coordonnée Y du robot :");
+		JLabel jLBY = new JLabel("Coordonnée X du robot :");
 	
 		this.log = log;
 		this.carte = carte;
@@ -74,20 +73,18 @@ public class CreationRobot extends JInternalFrame implements ActionListener{
 		jBAjouterRobot.addActionListener(this);
 		jBAjouterRobot.setActionCommand("robBlue");
 		
-		jBAjouterRobotTelecommande = new JButton("ajouter robot simulé");
+		jBAjouterRobotTelecommande = new JButton("ajouter robot telecommande");
 		jBAjouterRobotTelecommande.addActionListener(this);
 		jBAjouterRobotTelecommande.setActionCommand("robSim");
 		
 		jPanelConteneurCrea.add(jLBNom);
 		jPanelConteneurCrea.add(jTFNomRobot);
-		jPanelConteneurCrea.add(jLBAddr);
-		jPanelConteneurCrea.add(jTFAddresseBluetooth);
+
 		jPanelConteneurCrea.add(jLBY);
 		jPanelConteneurCrea.add(jTFYDepart);
 		jPanelConteneurCrea.add(jLBX);
 		jPanelConteneurCrea.add(jTFXDepart);
 		jPanelConteneurCrea.add(jCBOrientation);
-		jPanelConteneurCrea.add(jBAjouterRobot);
 		jPanelConteneurCrea.add(jBAjouterRobotTelecommande);
 
 		add(jPanelConteneurCrea);
@@ -117,7 +114,7 @@ public class CreationRobot extends JInternalFrame implements ActionListener{
 			
 			rbt = new Robot(nom,cas,orient,plateau,carte,log,robt);
 			
-			cas.setTypeImage(cas.getTypeImage()+"R"+orient.toString());
+			cas.setRobot("R"+orient.toString());
 			
 			controller.setRobot(rbt);
 			log.addEvent("Nouveau Robot :"+rbt.toString());
@@ -134,7 +131,7 @@ public class CreationRobot extends JInternalFrame implements ActionListener{
 			
 			rbt = new Robot(nom,cas,orient,plateau,carte,log,robt);
 			
-			cas.setTypeImage(cas.getTypeImage()+"R"+orient.toString());
+			cas.setRobot("R"+orient.toString());
 			
 			controller.setRobot(rbt);
 			log.addEvent("Nouveau Robot :"+rbt.toString());

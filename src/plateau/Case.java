@@ -4,11 +4,12 @@ public class Case implements Comparable<Case>{
 	String typeImage;
 	String patient;
 	String hopital;
+	String robot;
 	int x;
 	int y;
 	
 
-	//TODO : reconfigurer type image
+	//TODO : ajouter a robot et changer pour l'affichage etc
 	
 	public Case(String typeImage, int x, int y) {
 		this.typeImage = typeImage;
@@ -16,6 +17,7 @@ public class Case implements Comparable<Case>{
 		this.y = y;
 		patient = "";
 		hopital = "";
+		robot = "";
 	}
 	
 	public boolean equals(Object o) {
@@ -32,6 +34,10 @@ public class Case implements Comparable<Case>{
 	public String toString() {
 		return "Case [typeImage=" + typeImage + ", patient=" + patient + ", hopital=" + hopital + ", x=" + x + ", y="
 				+ y + "]";
+	}
+	
+	public String toStringSimpl() {
+		return "("+x+" , "+y+")";
 	}
 
 	public int compareTo(Case c) {
@@ -93,6 +99,18 @@ public class Case implements Comparable<Case>{
 
 	public String getTypeImage() {
 		return typeImage;
+	}
+	
+	public void setRobot(String rob) {
+		this.robot = rob;
+	}
+	
+	public String getRobot() {
+		return robot;
+	}
+	
+	public boolean isCase2() {
+		return typeImage.length() == 2;
 	}
 
 	

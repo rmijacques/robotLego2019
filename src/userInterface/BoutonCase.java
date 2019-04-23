@@ -11,8 +11,8 @@ public class BoutonCase extends JButton{
 	 */
 	private static final long serialVersionUID = 5840119001037147708L;
 
-	public BoutonCase(ImageIcon img,int x,int y) {
-		super("",img);
+	public BoutonCase(String p,ImageIcon img,int x,int y) {
+		super(p,img);
 		this.posX = x;
 		this.posY = y;
 	}

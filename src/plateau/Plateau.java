@@ -1,5 +1,6 @@
 package plateau;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import robot.Orientation;
@@ -18,7 +19,7 @@ public class Plateau {
 			cases[c.getX()][c.getY()] = c;
 		}
 		gp = new GraphePlateau(l,h,cases);
-		gp.toString();
+		System.out.println(gp.toString());
 		
 		nbPatients = 0;
 		hauteur = h;
@@ -45,14 +46,28 @@ public class Plateau {
 		return cases[x][y];
 	}
 	
-	public Case getCaseSuivanteWithCommandAndOrientation(Case c,String command,Orientation orient) {
-		List<Mouvement> listeMoves = gp.getMouvementsWithCase(c);
+	public Case getNextCase(Case c,Orientation orient) {
+		int x = c.getX();
+		int y = c.getY();
 		
-		for(Mouvement m: listeMoves) {
-			if(m.getMouv().equals(command) && m.getOrient() == orient)
-				return m.getDest();
+		switch(orient){
+		case EAST:
+			if(cases[x].length > y+1)
+				return cases[x][y+1];
+			break;
+		case WEST:
+			if(y-1 >= 0)
+				return cases[x][y-1];
+			break;
+		case NORTH:
+			if(x-1 >= 0)
+				return cases[x-1][y];
+			break;
+		case SOUTH:
+			if(x+1 < cases.length)
+				return cases[x+1][y];
+			break;
 		}
-
 		return null;
 	}
 	
@@ -66,6 +81,31 @@ public class Plateau {
 	
 	public int getNbPatients() {
 		return nbPatients;
+	}
+
+	public List<Case> trouverCasesVictimes() {
+		List<Case> victimes = new ArrayList<>();
+		
+		for(Case[] c: cases) {
+			for(Case c2: c) {
+				if(c2.hasPatient())
+					victimes.add(c2);
+			}
+		}
+		
+		return victimes;
+	}
+	
+	public List<Case> trouverCasesHopitaux() {
+		List<Case> hopitaux = new ArrayList<>();
+		
+		for(Case[] c: cases) {
+			for(Case c2: c) {
+				if(c2.hasHopital())
+					hopitaux.add(c2);
+			}
+		}
+		return hopitaux;
 	}
 }
 

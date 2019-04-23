@@ -1,17 +1,51 @@
 package robot;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import connexionCommunication.Robot_bt;
+import ia.IA;
 import plateau.Case;
 import plateau.Plateau;
 import userInterface.Carte;
 import userInterface.Logs;
 
 public class Robot {
+	public Case getPosition() {
+		return position;
+	}
+
+	public void setPosition(Case position) {
+		this.position = position;
+	}
+
+	public Orientation getDirection() {
+		return direction;
+	}
+
+	public void setDirection(Orientation direction) {
+		this.direction = direction;
+	}
+
+	public String getNom() {
+		return nom;
+	}
+
+	public void setNom(String nom) {
+		this.nom = nom;
+	}
+
 	Case position;
 	Orientation direction;
 	int nbVictime;
+	public int getNbVictime() {
+		return nbVictime;
+	}
+
+	public void setNbVictime(int nbVictime) {
+		this.nbVictime = nbVictime;
+	}
+
 	Plateau plat;
 	Carte crt;
 	String nom;
@@ -31,35 +65,49 @@ public class Robot {
 
 	@Override
 	public String toString() {
-		return "Robot [position=" + position + ", direction=" + direction + ", nom=" + nom + "]";
+		return "Robot [position=" + position.toStringSimpl() + ", direction=" + direction + ", nom=" + nom + "]";
 	}
 	
-	//straight à changer
 	
 	public void bouger(String command) {
-		Case dest = plat.getCaseSuivanteWithCommandAndOrientation(position,command,direction);
+		Case dest = plat.getNextCase(position,direction);
 		List<String> orientPoss;
 		Orientation temp;
-		String typeImActuel = position.getTypeImage().split("R")[0];
+		String typeImActuel = position.getTypeImage();
 		log.addEvent(toString());
 		
-		if(dest != null) {
-			log.addEvent("Moving...");
+		if(command.equals("u")) {
+			if(position.getTypeImage().length() ==3 ) {
+				log.addEvent("Pas de Uturn sur une case à trois branches !!!");
+				return;
+			}
+			log.addEvent("U turning");
+			temp = Orientation.UTurn(direction,typeImActuel);
+			robt.setMessage(command);
+			try {
+				TimeUnit.SECONDS.sleep(3);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			robt.setMessage("s");
+			direction = temp;
+			position.setRobot("R"+direction.toString());
 			
-			//On calcule la nouvelle orientation après le mouvement
-			temp = Orientation.nouvOrientApresMouv(direction,command,typeImActuel);
-			
-			//On vérifie que la nouvelle orientation est possible dans la case destination
+			crt.updateCarte(plat);
+		}
+		else if(dest != null && !(!dest.isCase2() && command.equals("s"))) {
+			log.addEvent("Moving from "+position.toStringSimpl()+" to "+dest.toStringSimpl() +" command =" + command);
+
+			temp = Orientation.nouvOrientApresMouv(direction,command,dest.getTypeImage());
 			orientPoss = Orientation.typeCasesPourOrient(temp);
-			
-			System.out.println(temp+" "+orientPoss+ dest.getTypeImage());
-			
+
 			if(orientPoss.contains(dest.getTypeImage())){	
 				robt.setMessage(command);
 				direction = temp;
-				position.setTypeImage(position.getTypeImage().split("R")[0]);
-				dest.setTypeImage(dest.getTypeImage()+"R"+direction.toString());
+				position.setRobot("");
+				dest.setRobot("R"+direction.toString());
 				position = dest;
+				
 				crt.updateCarte(plat);
 			}
 			else {
@@ -102,4 +150,9 @@ public class Robot {
 		else
 			log.addEvent("Pas d'hopitaux sur la case ou pas de patient dans l'ambulance");
 	}
+
+	public void ia() {
+		IA intellArt = new IA(this.plat, this);
+	}
+	
 }
