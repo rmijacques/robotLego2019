@@ -44,7 +44,7 @@ public class IA {
 				listeInst = chemim.getChemin().split("\n");
 				
 				if(! chemim.getDest().isCase2()) {
-					listeInst = destCase3Branches(listeInst);	
+					listeInst = destVictimeCase3Branches(listeInst);	
 				}
 			
 				rob.traiterMultiCommandes(listeInst);
@@ -53,6 +53,11 @@ public class IA {
 			else {
 				chemim = trouverPlusProcheHopital(rob.getPosition(), rob.getDirection());
 				listeInst = chemim.getChemin().split("\n");
+				
+				if(!chemim.getDest().isCase2() && victimes.size()>0) {
+					listeInst = destHopitalCase3Branches(listeInst);	
+				}
+				
 				rob.traiterMultiCommandes(listeInst);
 				rob.drop();
 			}
@@ -63,12 +68,22 @@ public class IA {
 	 * @param listeInst : Liste des instruction à effectuer
 	 * @return : la liste des instruction à effectuer en effectuant le meilleur choix sur la dernière case
 	 */
-	public String[] destCase3Branches(String[] listeInst) {
+	public String[] destVictimeCase3Branches(String[] listeInst) {
 		List<CaseOrientation> parcours = casesParcouruesEtOrientations(listeInst,rob.getPosition(),rob.getDirection());
 		Case avantDer = parcours.get(parcours.size()-2).getC();
 		Orientation avantDerO = parcours.get(parcours.size()-2).getOri();
 		
 		listeInst[listeInst.length-1] = trouverPlusProcheHopital(avantDer,avantDerO).getChemin().split("\n")[0];
+		
+		return listeInst;
+	}
+	
+	public String[] destHopitalCase3Branches(String[] listeInst) {
+		List<CaseOrientation> parcours = casesParcouruesEtOrientations(listeInst,rob.getPosition(),rob.getDirection());
+		Case avantDer = parcours.get(parcours.size()-2).getC();
+		Orientation avantDerO = parcours.get(parcours.size()-2).getOri();
+		
+		listeInst[listeInst.length-1] = trouverPlusProcheVictime(avantDer,avantDerO).getChemin().split("\n")[0];
 		
 		return listeInst;
 	}
