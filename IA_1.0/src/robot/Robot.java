@@ -193,8 +193,15 @@ public class Robot {
 	 */
 	public void ia() {
 		IA intellArt = new IA(this.plat, this);
-		
+		List<String> mouvsEffectues;
 		intellArt.faireDesChoses();
+		
+		mouvsEffectues = intellArt.mouvEffectues();
+		
+		log.addEvent("\n\n"+mouvsEffectues.size()+" mouvements effectués");
+		for(String s : mouvsEffectues)
+			log.addEvent(s);
+		
 	}
 	
 	public Case getPosition() {
