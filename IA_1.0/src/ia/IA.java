@@ -1,8 +1,8 @@
-
-
 package ia;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import plateau.Case;
@@ -34,32 +34,48 @@ public class IA {
 	 * "Routine" de l'IA, tant qu'il y a des victimes sur le plateau on les trouve et on les amènent à l'hopital
 	 */
 	public void faireDesChoses() {
-		Chemin chemim;
-		String[] listeInst;
+		Chemin chemin;
+		List<String> instructions = new ArrayList<>();
 		
 		while(victimes.size() > 0 || rob.getNbVictime() != 0) {
 			if(rob.getNbVictime() == 0) {	
-				chemim = trouverPlusProcheVictime(rob.getPosition(), rob.getDirection());
-				victimes.remove(chemim.getDest());
-				listeInst = chemim.getChemin().split("\n");
+				chemin = trouverPlusProcheVictime(rob.getPosition(), rob.getDirection());
+				victimes.remove(chemin.getDest());
+				if(instructions.size() == 0)
+					Collections.addAll(instructions,chemin.getChemin().split("\n"));
+
+				if(!chemin.getDest().isCase2()) 
+					instructions = destVictimeCase3Branches(instructions);
 				
-				if(! chemim.getDest().isCase2()) {
-					listeInst = destVictimeCase3Branches(listeInst);	
+				while(instructions.size() > 0 && !instructions.get(0).equals("p")) {
+					rob.traiterCommande(instructions.get(0));
+					instructions.remove(0);
 				}
-			
-				rob.traiterMultiCommandes(listeInst);
+				
 				rob.pick();
+				
+				if(instructions.size() != 0) 
+					instructions.remove(0);
+				
+
 			}
 			else {
-				chemim = trouverPlusProcheHopital(rob.getPosition(), rob.getDirection());
-				listeInst = chemim.getChemin().split("\n");
+				chemin = trouverPlusProcheHopital(rob.getPosition(), rob.getDirection());
+				if(instructions.size() == 0)
+					Collections.addAll(instructions,chemin.getChemin().split("\n"));
 				
-				if(!chemim.getDest().isCase2() && victimes.size()>0) {
-					listeInst = destHopitalCase3Branches(listeInst);	
+				if(!chemin.getDest().isCase2() && victimes.size()>0) 
+					instructions = destHopitalCase3Branches(instructions);	
+				
+				while(instructions.size() > 0 && !instructions.get(0).equals("d")) {
+					rob.traiterCommande(instructions.get(0));
+					instructions.remove(0);
 				}
 				
-				rob.traiterMultiCommandes(listeInst);
 				rob.drop();
+				
+				if(instructions.size() != 0) 
+					instructions.remove(0);
 			}
 		}
 	}
@@ -68,23 +84,45 @@ public class IA {
 	 * @param listeInst : Liste des instruction à effectuer
 	 * @return : la liste des instruction à effectuer en effectuant le meilleur choix sur la dernière case
 	 */
-	public String[] destVictimeCase3Branches(String[] listeInst) {
+	public List<String> destVictimeCase3Branches(List<String> listeInst) {
 		List<CaseOrientation> parcours = casesParcouruesEtOrientations(listeInst,rob.getPosition(),rob.getDirection());
 		Case avantDer = parcours.get(parcours.size()-2).getC();
 		Orientation avantDerO = parcours.get(parcours.size()-2).getOri();
+		String[] chem;
+		List<String> chemTemp = new ArrayList<>();
 		
-		listeInst[listeInst.length-1] = trouverPlusProcheHopital(avantDer,avantDerO).getChemin().split("\n")[0];
+		chem = trouverPlusProcheHopital(avantDer,avantDerO).getChemin().split("\n");
+		chemTemp = Arrays.asList(
+				chem);
 		
+		if(!chem[0].equals("u")) {
+			listeInst.set(listeInst.size()-1,chem[0]);
+			listeInst.add("p");
+			chemTemp.remove(0);
+			listeInst.addAll(chemTemp);
+		}
+
 		return listeInst;
 	}
 	
-	public String[] destHopitalCase3Branches(String[] listeInst) {
+	
+	public List<String> destHopitalCase3Branches(List<String> listeInst) {
 		List<CaseOrientation> parcours = casesParcouruesEtOrientations(listeInst,rob.getPosition(),rob.getDirection());
 		Case avantDer = parcours.get(parcours.size()-2).getC();
 		Orientation avantDerO = parcours.get(parcours.size()-2).getOri();
+		String[] chem;
+		List<String> chemTemp = new ArrayList<>();
 		
-		listeInst[listeInst.length-1] = trouverPlusProcheVictime(avantDer,avantDerO).getChemin().split("\n")[0];
+		chem = trouverPlusProcheVictime(avantDer,avantDerO).getChemin().split("\n");
+		chemTemp = Arrays.asList(chem);
 		
+		if(!chem[0].equals("u")) {
+			listeInst.set(listeInst.size()-1,chem[0]);
+			listeInst.add("d");
+			chemTemp.remove(0);
+			listeInst.addAll(chemTemp);
+		}
+
 		return listeInst;
 	}
 	
@@ -96,7 +134,7 @@ public class IA {
 	 * @param oDepart : orientation actuelle du robot
 	 * @return : un tableau contenant les coupkes case/orientation que le robot parcourrerait en suivant les instructions de listeInst
 	 */
-	public List<CaseOrientation> casesParcouruesEtOrientations(String[] listeInst, Case cDepart, Orientation oDepart){
+	public List<CaseOrientation> casesParcouruesEtOrientations(List<String> listeInst, Case cDepart, Orientation oDepart){
 		List <CaseOrientation>couples = new ArrayList<>();
 		Case cTemp = cDepart;
 		Orientation oTemp = oDepart;
