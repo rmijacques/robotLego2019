@@ -42,7 +42,7 @@ public class IA {
 				chemin = trouverPlusProcheVictime(rob.getPosition(), rob.getDirection());
 				victimes.remove(chemin.getDest());
 				if(instructions.size() == 0)
-					Collections.addAll(instructions,chemin.getChemin().split("\n"));
+					instructions = Arrays.asList(chemin.getChemin().split("\n"));
 
 				if(!chemin.getDest().isCase2()) 
 					instructions = destVictimeCase3Branches(instructions);
@@ -62,7 +62,7 @@ public class IA {
 			else {
 				chemin = trouverPlusProcheHopital(rob.getPosition(), rob.getDirection());
 				if(instructions.size() == 0)
-					Collections.addAll(instructions,chemin.getChemin().split("\n"));
+					instructions = Arrays.asList(chemin.getChemin().split("\n"));
 				
 				if(!chemin.getDest().isCase2() && victimes.size()>0) 
 					instructions = destHopitalCase3Branches(instructions);	
