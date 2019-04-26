@@ -1,7 +1,6 @@
 package ia;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,6 +18,7 @@ import robot.Robot;
 public class IA {
 	List<Case> victimes;
 	List<Case> hopitaux;
+	List<String> tousLesMouvs;
 	Plateau plat;
 	Robot rob;
 	Recherche rech;
@@ -36,23 +36,26 @@ public class IA {
 	public void faireDesChoses() {
 		Chemin chemin;
 		List<String> instructions = new ArrayList<>();
+		tousLesMouvs = new ArrayList<>();
 		
 		while(victimes.size() > 0 || rob.getNbVictime() != 0) {
 			if(rob.getNbVictime() == 0) {	
 				chemin = trouverPlusProcheVictime(rob.getPosition(), rob.getDirection());
 				victimes.remove(chemin.getDest());
 				if(instructions.size() == 0)
-					instructions = Arrays.asList(chemin.getChemin().split("\n"));
+					Collections.addAll(instructions,chemin.getChemin().split("\n"));
 
 				if(!chemin.getDest().isCase2()) 
 					instructions = destVictimeCase3Branches(instructions);
 				
 				while(instructions.size() > 0 && !instructions.get(0).equals("p")) {
 					rob.traiterCommande(instructions.get(0));
+					tousLesMouvs.add(instructions.get(0));
 					instructions.remove(0);
 				}
 				
 				rob.pick();
+				tousLesMouvs.add("p");
 				
 				if(instructions.size() != 0) 
 					instructions.remove(0);
@@ -62,17 +65,19 @@ public class IA {
 			else {
 				chemin = trouverPlusProcheHopital(rob.getPosition(), rob.getDirection());
 				if(instructions.size() == 0)
-					instructions = Arrays.asList(chemin.getChemin().split("\n"));
+					Collections.addAll(instructions,chemin.getChemin().split("\n"));
 				
 				if(!chemin.getDest().isCase2() && victimes.size()>0) 
 					instructions = destHopitalCase3Branches(instructions);	
 				
 				while(instructions.size() > 0 && !instructions.get(0).equals("d")) {
+					tousLesMouvs.add(instructions.get(0));
 					rob.traiterCommande(instructions.get(0));
 					instructions.remove(0);
 				}
 				
 				rob.drop();
+				tousLesMouvs.add("d");
 				
 				if(instructions.size() != 0) 
 					instructions.remove(0);
@@ -92,8 +97,7 @@ public class IA {
 		List<String> chemTemp = new ArrayList<>();
 		
 		chem = trouverPlusProcheHopital(avantDer,avantDerO).getChemin().split("\n");
-		chemTemp = Arrays.asList(
-				chem);
+		Collections.addAll(chemTemp, chem);
 		
 		if(!chem[0].equals("u")) {
 			listeInst.set(listeInst.size()-1,chem[0]);
@@ -114,7 +118,7 @@ public class IA {
 		List<String> chemTemp = new ArrayList<>();
 		
 		chem = trouverPlusProcheVictime(avantDer,avantDerO).getChemin().split("\n");
-		chemTemp = Arrays.asList(chem);
+		Collections.addAll(chemTemp, chem);
 		
 		if(!chem[0].equals("u")) {
 			listeInst.set(listeInst.size()-1,chem[0]);
@@ -200,6 +204,10 @@ public class IA {
 			}
 		}
 		return ret;
+	}
+	
+	public List<String> mouvEffectues(){
+		return tousLesMouvs;
 	}
 	
 
