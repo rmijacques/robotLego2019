@@ -42,9 +42,12 @@ public class IA {
 			if(rob.getNbVictime() == 0) {	
 				chemin = trouverPlusProcheVictime(rob.getPosition(), rob.getDirection());
 				victimes.remove(chemin.getDest());
+				System.out.println(instructions.size());
+				System.out.println(chemin.getDest().toString());
+				System.out.println(chemin.getChemin());
 				if(instructions.size() == 0)
 					Collections.addAll(instructions,chemin.getChemin().split("\n"));
-
+				System.out.println(instructions.toString());
 				if(!chemin.getDest().isCase2()) 
 					instructions = destVictimeCase3Branches(instructions);
 				
@@ -145,7 +148,8 @@ public class IA {
 		
 		for(String s: listeInst) {
 			couples.add(new CaseOrientation(cTemp, oTemp));
-			cTemp = plat.getNextCase(cTemp,oTemp);
+			if(!s.equals("u"))
+				cTemp = plat.getNextCase(cTemp,oTemp);
 			oTemp = Orientation.nouvOrientApresMouv(oTemp, s, cTemp.getTypeImage());
 		}
 		couples.add(new CaseOrientation(cTemp, oTemp));
