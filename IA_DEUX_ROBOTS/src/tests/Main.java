@@ -45,7 +45,6 @@ public class Main extends JFrame{
 		Robot_bt robt = null;
 		Robot_bt rob_autonome = null;
 		
-		
 		int width;
 		int height;
 		String ligneCarte;

@@ -12,15 +12,21 @@ public class Reception implements Runnable {
 		this.rob = r;
 		this.input = in;
 	}
-	//TODO: Ameiliorer le caca ici présent qui marche ap
+	//TODO: Ameliorer le caca ici présent qui marche ap
+	//TODO: Ameliorer le caca ici présent qui marche ap
 	public void run() {
 		String message;
 		while(true) {
 			try {
-				while(rob == null || rob.getMessage()!=""); 
-					message = String.valueOf(input.readChar());
-					if(!message.equals("0"))
+				message = String.valueOf(input.readChar());
+				if(!message.equals("0")) {
+					System.out.println("Envoyé par rob : "+message);
+					if(rob!=null) {
+						System.out.println("sent to bot");
 						rob.setMessage(message);
+					}
+				}
+				
 				
 			} catch (IOException e) {
 				e.printStackTrace();

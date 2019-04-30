@@ -12,8 +12,6 @@ import robot.Robot;
  */
 public class Robot_bt {
 	private Connexion cn;
-	private String addr;
-	private String name;
 	private DataInputStream DataIn;
 	private DataOutputStream DataOut;
 	private boolean objectif;
@@ -30,8 +28,6 @@ public class Robot_bt {
 	 * @param name Le nom du robot auquel on souhaite se connecter.
 	 */
 	public Robot_bt (String addr, String name){
-		this.addr = addr;
-		this.name = name;
 		this.lock = false;
 		this.objectif = false;
 

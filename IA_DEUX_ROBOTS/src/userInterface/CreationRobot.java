@@ -72,11 +72,11 @@ public class CreationRobot extends JInternalFrame implements ActionListener{
 		
 		jBAjouterRobot = new JButton("ajouter robot telecommande");
 		jBAjouterRobot.addActionListener(this);
-		jBAjouterRobot.setActionCommand("robBlue");
+		jBAjouterRobot.setActionCommand("robTele");
 		
 		jBAjouterRobotTelecommande = new JButton("ajouter robot autonome");
 		jBAjouterRobotTelecommande.addActionListener(this);
-		jBAjouterRobotTelecommande.setActionCommand("robSim");
+		jBAjouterRobotTelecommande.setActionCommand("robAuto");
 		
 		jPanelConteneurCrea.add(jLBNom);
 		jPanelConteneurCrea.add(jTFNomRobot);
@@ -108,7 +108,7 @@ public class CreationRobot extends JInternalFrame implements ActionListener{
 		
 		//création d'un nouveau robot simulé dans le logiciel, MAJ de la carte
 		switch (e.getActionCommand()) {
-		case "robSim":
+		case "robAuto":
 			nom = jTFNomRobot.getText();
 			orient = (Orientation) jCBOrientation.getSelectedItem();
 			x = Integer.parseInt(jTFXDepart.getText());
@@ -125,7 +125,7 @@ public class CreationRobot extends JInternalFrame implements ActionListener{
 			dispose();
 			break;
 			
-		case "robBlue":
+		case "robTele":
 			nom = jTFNomRobot.getText();
 			orient = (Orientation) jCBOrientation.getSelectedItem();
 			x = Integer.parseInt(jTFXDepart.getText());
@@ -133,7 +133,7 @@ public class CreationRobot extends JInternalFrame implements ActionListener{
 			cas = plateau.getCaseByCoordinates(x, y);
 			
 			robotTelecommande = new Robot(nom,cas,orient,plateau,carte,log,robt);
-			
+			robt.setRobotReception(robotTelecommande);
 			cas.setRobot("R"+orient.toString());
 			
 			controller.setRobotTelecommande(robotTelecommande);

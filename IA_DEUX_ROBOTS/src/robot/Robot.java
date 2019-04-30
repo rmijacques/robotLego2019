@@ -28,14 +28,13 @@ public class Robot {
 	private Orientation direction;
 	private int nbVictime;
 	private String message;
+	private volatile Boolean newMessage;
 	
 	public String getMessage() {
 		return message;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+
 
 	/**
 	 * @param nom : Nom du robot
@@ -56,6 +55,7 @@ public class Robot {
 		this.log = log;
 		this.robBluetooth = robt;
 		this.message = "";
+		this.newMessage = false;
 	}
 
 	@Override
@@ -147,13 +147,19 @@ public class Robot {
 			caseDest.setRobot("R"+direction.toString());
 			position = caseDest;
 			envoyerCommande(command);
-			while(message =="");
-			message="";
+			//Commenter ici pour désactiver temps réel
+			while(newMessage == false);
+			newMessage = false;
 			carte.updateCarte(plat);
 		}
 		else {
 			log.addEvent("C'est une impasse vous ne pouvez pas aller par la !");
 		}
+	}
+	
+	public void setMessage(String message) {
+		this.message = message;
+		this.newMessage = true;
 	}
 	
 	
