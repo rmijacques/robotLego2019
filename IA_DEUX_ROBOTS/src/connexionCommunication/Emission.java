@@ -21,6 +21,7 @@ public class Emission implements Runnable {
 			output.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
+			
 		}
 	}
 

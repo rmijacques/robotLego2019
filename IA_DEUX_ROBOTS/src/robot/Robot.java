@@ -29,6 +29,7 @@ public class Robot {
 	private int nbVictime;
 	private String message;
 	private volatile Boolean newMessage;
+	public Boolean simu;
 	
 	public String getMessage() {
 		return message;
@@ -56,6 +57,8 @@ public class Robot {
 		this.robBluetooth = robt;
 		this.message = "";
 		this.newMessage = false;
+		//Changer si pas simu
+		simu = true;
 	}
 
 	@Override
@@ -122,8 +125,10 @@ public class Robot {
 			robBluetooth.setMessage("s");
 			direction = temp;
 			position.setRobot("R"+direction.toString());
-			while(message =="");
-			message="";
+			if(!simu) {
+				while(newMessage == false);
+				newMessage = false;
+			}
 			carte.updateCarte(plat);
 		}
 		else {
@@ -142,14 +147,23 @@ public class Robot {
 		
 		if(typeCasesPossibles.contains(caseDest.getTypeImage())){	
 			log.addEvent("Moving from "+position.toStringSimpl()+" to "+caseDest.toStringSimpl() +" command =" + command);
+			envoyerCommande(command);
+			if(!simu) {
+				while(newMessage == false);
+				newMessage = false;
+			}
+
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			direction = oTemp;
 			position.setRobot("");
 			caseDest.setRobot("R"+direction.toString());
 			position = caseDest;
-			envoyerCommande(command);
-			//Commenter ici pour désactiver temps réel
-			while(newMessage == false);
-			newMessage = false;
+			
+			
 			carte.updateCarte(plat);
 		}
 		else {
@@ -185,9 +199,13 @@ public class Robot {
 			log.addEvent("Patient récupéré sur la case :"+c.toStringSimpl());
 			carte.updateCarte(plat);
 			robBluetooth.setMessage("t");
+			List<Case> temp = plat.getVictimes();
+			temp.remove(position);
+			plat.setVictimes(temp);
 		}
 		else
 			log.addEvent("Pas de patients sur la case");
+
 	}
 	
 	
@@ -216,23 +234,24 @@ public class Robot {
 		int nbAct = 0;
 		IA intellArt = new IA(this.plat, this);
 		List<String> mouvsEffectues;
-		intellArt.faireDesChoses();
-		
-		mouvsEffectues = intellArt.mouvEffectues();
 
+		new Thread(intellArt).start();
 		
-		for(String s : mouvsEffectues) {
-			log.addEvent("--- "+s);
-			if(s.equals("u")) {
-				log.addEvent("--- s");
-				nbMouvs++;
-			}
-			if(s.equals("d") || s.equals("t")) 
-				nbAct++;
-			else
-				nbMouvs++;
-		}
-		log.addEvent("\n\n"+nbMouvs+" mouvements effectués et "+nbAct+" ramassages ou déposages effectues!");
+//		mouvsEffectues = intellArt.mouvEffectues();
+//
+//		
+//		for(String s : mouvsEffectues) {
+//			log.addEvent("--- "+s);
+//			if(s.equals("u")) {
+//				log.addEvent("--- s");
+//				nbMouvs++;
+//			}
+//			if(s.equals("d") || s.equals("t")) 
+//				nbAct++;
+//			else
+//				nbMouvs++;
+//		}
+//		log.addEvent("\n\n"+nbMouvs+" mouvements effectués et "+nbAct+" ramassages ou déposages effectues!");
 	}
 	
 	public Case getPosition() {

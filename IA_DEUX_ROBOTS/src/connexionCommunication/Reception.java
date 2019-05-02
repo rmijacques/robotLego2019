@@ -30,6 +30,7 @@ public class Reception implements Runnable {
 				
 			} catch (IOException e) {
 				e.printStackTrace();
+				break;
 			}
 		}
 	}

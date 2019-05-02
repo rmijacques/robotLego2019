@@ -103,7 +103,8 @@ public class Main extends JFrame{
 		log = new Logs();
 		plat = new Plateau(height,width,lcases);
 		carte = new Carte(plat,log);
-		ctrl= new Controller(log);
+		ctrl= new Controller(log,plat);
+
 		gr = new GestionRobots(log,ctrl,plat,carte,robt,rob_autonome);
 		
 		frame.getContentPane().add(gr);

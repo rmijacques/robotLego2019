@@ -1,6 +1,5 @@
 package ia;
 
-import java.awt.font.NumericShaper.Range;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -10,19 +9,23 @@ import plateau.CaseOrientation;
 import plateau.Plateau;
 import robot.Orientation;
 import robot.Robot;
+import userInterface.Logs;
 
 public class IADeuxRobots implements Runnable {
-	Robot rAutonome;
-	Robot rTelecommande;
-	List<Case> victimes;
+	private volatile Robot rAutonome;
+	private volatile Robot rTelecommande;
 	List<Case> hopitaux;
-	Plateau plat;
+	private volatile Plateau plat;
 	Boolean doNothing;
+	Logs log;
 	
 	
-	public IADeuxRobots(Robot rAuto,Robot rtel,Plateau plat) {
-		victimes = plat.trouverCasesVictimes();
+	public IADeuxRobots(Robot rAuto,Robot rtel,Plateau plat,Logs log) {
 		hopitaux = plat.trouverCasesHopitaux();
+		this.rAutonome = rAuto;
+		this.rTelecommande = rtel;
+		this.plat =plat;
+		this.log = log;
 	}
 	
 	
@@ -31,11 +34,16 @@ public class IADeuxRobots implements Runnable {
 		Chemin cheminRobTelecommande = new Chemin(null,null,null);
 		List<String> instructionsRobotAutonome = new ArrayList<>();
 		List<String> instructionsRobotTel = new ArrayList<>();
-		List<CaseOrientation> parcoursTel;
-		List<CaseOrientation> parcoursAuto;
-		Case collision;
 		
-		while(victimes.size() > 0 || rAutonome.getNbVictime() != 0) {
+		
+		while(plat.getVictimes().size() > 0 || rAutonome.getNbVictime() != 0) {
+			if(rTelecommande.getNbVictime() == 0)
+				cheminRobTelecommande = trouverPlusProcheVictime(rTelecommande.getPosition(), rTelecommande.getDirection(),null);
+			else
+				cheminRobTelecommande = trouverPlusProcheHopital(rTelecommande.getPosition(), rTelecommande.getDirection());
+			log.addEvent("Le meilleur chemin pour le robot Telecommande est :"+cheminRobTelecommande.getChemin());
+			
+			
 			if(rAutonome.getNbVictime() == 0) {
 				//On calcule le plus proche chemin pour les deux
 				if(instructionsRobotAutonome.size() == 0) {
@@ -44,54 +52,93 @@ public class IADeuxRobots implements Runnable {
 				}
 		
 				if(instructionsRobotTel.size() == 0) {
-					if(rTelecommande.getNbVictime() == 0)
-						cheminRobTelecommande = trouverPlusProcheVictime(rTelecommande.getPosition(), rTelecommande.getDirection(),null);
-					else
-						cheminRobTelecommande = trouverPlusProcheHopital(rTelecommande.getPosition(), rTelecommande.getDirection());
 					Collections.addAll(instructionsRobotTel, cheminRobTelecommande.getChemin().split("\n"));
 				}
 				
+				cheminRobAutonome = memeVictime(cheminRobAutonome, cheminRobTelecommande, instructionsRobotTel, instructionsRobotAutonome);
+				verifierCollision(instructionsRobotAutonome, instructionsRobotTel);
 				
-				
-				//Cas ou les deux ont la meme victime à rechercher
-				if(cheminRobAutonome.getDest().equals(cheminRobTelecommande.getDest())) {
-					//Si le robot autonome est le plus loin, on recalcule
-					if(instructionsRobotAutonome.size() > instructionsRobotTel.size()) {
-						if(victimes.size() == 1) {
-							doNothing = true;
-						}
-						else {
-							cheminRobAutonome = trouverPlusProcheVictime(rAutonome.getPosition(),rAutonome.getDirection() ,cheminRobAutonome.getDest());
-							instructionsRobotAutonome.clear();
-							Collections.addAll(instructionsRobotAutonome,cheminRobAutonome.getChemin().split("\n"));
-						}
-					}
-					else {
-						//Cas ou robot tel est le plus proche
-					}
-					
+				while(instructionsRobotAutonome.size() > 0 && !instructionsRobotAutonome.get(0).equals("t")) {
+					rAutonome.traiterCommande(instructionsRobotAutonome.get(0));
+					instructionsRobotAutonome.remove(0);
 				}
-
-				//En case de collision on fait attendre le robot humain
-				//Suicide ++
+				rAutonome.pick();
 				
-//				parcoursAuto = casesParcouruesEtOrientations(instructionsRobotAutonome, rAutonome.getPosition(), rAutonome.getDirection(), rAutonome);
-//				parcoursTel = casesParcouruesEtOrientations(instructionsRobotTel, rTelecommande.getPosition(), rTelecommande.getDirection(), rTelecommande);
-//				collision = trouverCollision(parcoursTel, parcoursAuto);
-//				
-//				if(collision != null) {
-//					
-//				}
-			
+				if(instructionsRobotAutonome.size() != 0) 
+					instructionsRobotAutonome.remove(0);
+
 			}
 			else {
+				//On calcule le plus proche chemin pour les deux
+				if(instructionsRobotAutonome.size() == 0) {
+					cheminRobAutonome = trouverPlusProcheHopital(rAutonome.getPosition(), rAutonome.getDirection());
+					Collections.addAll(instructionsRobotAutonome,cheminRobAutonome.getChemin().split("\n"));
+				}
+		
+				if(instructionsRobotTel.size() == 0) {
+					Collections.addAll(instructionsRobotTel, cheminRobTelecommande.getChemin().split("\n"));
+				}
+				
+				//cheminRobAutonome = memeVictime(cheminRobAutonome, cheminRobTelecommande, instructionsRobotTel, instructionsRobotAutonome);
+				verifierCollision(instructionsRobotAutonome, instructionsRobotTel);
+				
+				while(instructionsRobotAutonome.size() > 0 && !instructionsRobotAutonome.get(0).equals("d")) {
+					rAutonome.traiterCommande(instructionsRobotAutonome.get(0));
+					instructionsRobotAutonome.remove(0);
+				}
+				rAutonome.drop();
 				
 			}
 		}
 		
 	}
 	
+	public Chemin memeVictime(Chemin cheminRobAutonome,Chemin cheminRobTelecommande,List<String> instructionsRobotTel,List<String> instructionsRobotAutonome) {
+		if(cheminRobAutonome.getDest().equals(cheminRobTelecommande.getDest())) {
+			//Si le robot autonome est le plus loin, on recalcule
+			if(instructionsRobotAutonome.size() >= instructionsRobotTel.size()) {
+				if(plat.getVictimes().size() == 1) {
+					doNothing = true;
+				}
+				else {
+					cheminRobAutonome = trouverPlusProcheVictime(rAutonome.getPosition(),rAutonome.getDirection() ,cheminRobAutonome.getDest());
+					instructionsRobotAutonome.clear();
+					Collections.addAll(instructionsRobotAutonome,cheminRobAutonome.getChemin().split("\n"));
+				}
+			}
+			else {
+				//Cas ou robot autonome est le plus proche(robot tel change de victime)
+			}
+			
+		}
+		return cheminRobAutonome;
+	}
 	
+	
+	
+	public void verifierCollision(List<String> instructionsRobotAutonome,List<String> instructionsRobotTel) {
+		List<CaseOrientation> parcoursAuto;
+		List<CaseOrientation> parcoursTel;
+		Case collision = null;
+		Case aprCollision = null;
+		
+		parcoursAuto = casesParcouruesEtOrientations(instructionsRobotAutonome, rAutonome.getPosition(), rAutonome.getDirection(), rAutonome);
+		parcoursTel = casesParcouruesEtOrientations(instructionsRobotTel, rTelecommande.getPosition(), rTelecommande.getDirection(), rTelecommande);
+		collision = trouverCollision(parcoursTel, parcoursAuto);
+		
+		
+		if(collision != null) {
+			for(int i=0;i<parcoursAuto.size();i++) {
+				if(parcoursAuto.get(i).getC().equals(collision) && i+1 < parcoursAuto.size()) {
+					aprCollision = parcoursAuto.get(i+1).getC();
+					break;
+				}
+			}
+			log.addEvent("!!!!!!!!!!!!!   Attention collision prévue sur la case "+collision.toStringSimpl());
+			if(aprCollision != null)
+				log.addEvent("!!!!!!!!!!!!!   La case après la collision sera "+aprCollision.toStringSimpl());
+		}
+	}
 	
 	/**Traite le cas ou la dernière case est une case à 3 branches, il faut donc baser le choix de la derniere commande sur le nouveau chemin à suivre ensuite
 	 * @param listeInst : Liste des instruction à effectuer
@@ -175,8 +222,8 @@ public class IADeuxRobots implements Runnable {
 		Chemin ret = new Chemin(caseDepart,null,null);
 		Recherche rech;
 		
-		for(Case c:victimes) {
-			if(!c.equals(notDis)) {
+		for(Case c:plat.getVictimes()) {
+			if(notDis == null || !c.equals(notDis)) {
 				rech = new Recherche(plat, caseDepart, c, orientDepart);
 				chemin = rech.getInstructionsList();
 				

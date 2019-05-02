@@ -17,7 +17,7 @@ import robot.Robot;
 
 //TODO: cas victime à meme distance
 
-public class IA {
+public class IA implements Runnable{
 	List<Case> victimes;
 	List<Case> hopitaux;
 	List<String> tousLesMouvs;
@@ -35,7 +35,10 @@ public class IA {
 	/**
 	 * "Routine" de l'IA, tant qu'il y a des victimes sur le plateau on les trouve et on les amènent à l'hopital
 	 */
-	public void faireDesChoses() {
+
+	
+	@Override
+	public void run() {
 		Chemin chemin;
 		List<String> instructions = new ArrayList<>();
 		tousLesMouvs = new ArrayList<>();
@@ -44,12 +47,8 @@ public class IA {
 			if(rob.getNbVictime() == 0) {	
 				chemin = trouverPlusProcheVictime(rob.getPosition(), rob.getDirection());
 				victimes.remove(chemin.getDest());
-				System.out.println(instructions.size());
-				System.out.println(chemin.getDest().toString());
-				System.out.println(chemin.getChemin());
 				if(instructions.size() == 0)
 					Collections.addAll(instructions,chemin.getChemin().split("\n"));
-				System.out.println(instructions.toString());
 				if(!chemin.getDest().isCase2()) 
 					instructions = destVictimeCase3Branches(instructions);
 				
@@ -88,6 +87,7 @@ public class IA {
 					instructions.remove(0);
 			}
 		}
+		
 	}
 	
 	/**Traite le cas ou la dernière case est une case à 3 branches, il faut donc baser le choix de la derniere commande sur le nouveau chemin à suivre ensuite
@@ -215,6 +215,8 @@ public class IA {
 	public List<String> mouvEffectues(){
 		return tousLesMouvs;
 	}
+
+
 	
 
 	

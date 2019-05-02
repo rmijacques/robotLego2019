@@ -31,7 +31,7 @@ public class Connexion {
 	public Connexion (String addr, String name) throws NXTCommException{
 		com = new NXTConnector();
 		robot = new NXTInfo(NXTCommFactory.BLUETOOTH, name, addr);
-		
+		recept = null;
 		
 		
 		com.addLogListener(new NXTCommLogListener(){
@@ -59,7 +59,8 @@ public class Connexion {
 		}
 	
 	public void setRobotRecepetion(Robot r) {
-		recept.setRobot(r);
+		if(recept != null)
+			recept.setRobot(r);
 	}
 	/**
 	 * @return Renvoie le {@link java.io.DataInputStream} correspondant à cette connexion.

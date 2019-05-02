@@ -15,7 +15,16 @@ public class Plateau {
 	private int hauteur;
 	private int largeur;
 	private int nbPatients;
+	private volatile List<Case> victimes;
 	
+	public List<Case> getVictimes() {
+		return victimes;
+	}
+
+	public void setVictimes(List<Case> victimes) {
+		this.victimes = victimes;
+	}
+
 	/**
 	 * @param l La largeur du plateau.
 	 * @param h La hauteur du plateau.
@@ -33,6 +42,7 @@ public class Plateau {
 		nbPatients = 0;
 		hauteur = h;
 		largeur = l;
+		victimes = trouverCasesVictimes();
 	}
 
 	public GraphePlateau getGp() {
@@ -96,6 +106,7 @@ public class Plateau {
 	 */
 	public void addPatient() {
 		nbPatients++;
+		victimes = trouverCasesVictimes();
 	}
 	
 	/**

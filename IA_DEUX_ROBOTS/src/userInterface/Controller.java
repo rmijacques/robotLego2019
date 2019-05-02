@@ -12,6 +12,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import ia.IADeuxRobots;
+import plateau.Plateau;
 import robot.Robot;
 
 public class Controller extends JPanel implements ActionListener{
@@ -30,12 +32,14 @@ public class Controller extends JPanel implements ActionListener{
 	JLabel control;
 	Robot robotTelecommande;
 	Robot robotAutonome;
+	Plateau plat;
 	
 	
 	
-	public Controller(Logs log) {
+	public Controller(Logs log,Plateau plat) {
 		super();
 		this.log = log;
+		this.plat =plat;
 		
 		setLayout(new GridLayout(5,3));
 		setMaximumSize(new Dimension(150,200));
@@ -132,11 +136,16 @@ public class Controller extends JPanel implements ActionListener{
 				break;
 			case "ia" :
 				log.addEvent("Yehaw");
-				robotAutonome.ia();
+				IADeuxRobots deuxRobs = new IADeuxRobots(robotAutonome, robotTelecommande, plat, log);
+				new Thread(deuxRobs).start();
 			default:
 				;
 			
 		}
 		
+	}
+	
+	public void setPlateau(Plateau plat) {
+		this.plat =plat;
 	}
 }
