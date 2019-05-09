@@ -55,7 +55,7 @@ public class Case implements Comparable<Case>{
 	 * @return Ne renvoie que les coordonnées x et y.
 	 */
 	public String toStringSimpl() {
-		return "("+x+" , "+y+")";
+		return "("+y+" , "+x+")";
 	}
 
 	public int compareTo(Case c) {

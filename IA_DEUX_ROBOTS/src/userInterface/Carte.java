@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+
 import plateau.Case;
 import plateau.Plateau;
 
@@ -36,7 +37,7 @@ public class Carte extends JPanel implements ActionListener{
 		
 		for(int i=0;i<h;i++) {
 			for(int j=0;j<l;j++) {
-				imageCase = new ImageIcon("./imagesCases/"+cases[i][j].getTypeImage()+".png");
+				imageCase = new ImageIcon("./imagesCases/"+cases[i][j].getPatient()+cases[i][j].getHopital()+cases[i][j].getTypeImage()+cases[i][j].getRobot()+".png");
 				boutonCase = new BoutonCase("",imageCase,i,j);
 				boutonCase.addActionListener(this);
 				boutonCase.setPreferredSize(new Dimension(100,100));
@@ -46,14 +47,12 @@ public class Carte extends JPanel implements ActionListener{
 		}
 	}
 	
-	public void updateCarte(Plateau plat) {
-		JButton boutonCase;
-		ImageIcon imageCase;
-
+	public synchronized void updateCarte(Plateau plat) {
 		int h = plat.getHauteur();
 		int l = plat.getLargeur();
-		
 		Case[][] cases = plat.getCases();
+		JButton boutonCase;
+		ImageIcon imageCase;
 		
 		for(int i=0;i<h;i++) {
 			for(int j=0;j<l;j++) {
@@ -91,6 +90,7 @@ public class Carte extends JPanel implements ActionListener{
 		else{
 			log.addEvent("Hopital enlevé sur la case "+c.toStringSimpl());
 			c.setHopital("");
+			c.prendrePatient();
 		}
 		System.out.println(plat.getGp().toString());
 		updateCarte(plat);
