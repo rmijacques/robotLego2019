@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
@@ -44,6 +45,10 @@ public class Main extends JFrame{
 		Scanner scanCases;
 		Robot_bt robt = null;
 		Robot_bt rob_autonome = null;
+		String [] nomRobots = {"Glaedr","Firnen","Thorn","Saphira","Shruikan"};
+		String [] addrRobots = {"00:16:53:1C:15:FC","00:16:53:16:2E:5B","","","00:16:53:1C:19:95"};
+		JComboBox<String> choixTel = new JComboBox<>(nomRobots);
+		
 		
 		int width;
 		int height;
@@ -52,6 +57,7 @@ public class Main extends JFrame{
 		List<Case> lcases = new ArrayList<>();
 		String nomRobot;
 		String addrRobot;
+		int numRobot;
 		
 		nomFich = (String)JOptionPane.showInputDialog(null,"Entrez le fichier de la carte :","Carte",JOptionPane.QUESTION_MESSAGE,null,null,"5X5FATTEST.txt");
 		fichCarte = new File("./cartesTest/"+nomFich);
@@ -60,19 +66,24 @@ public class Main extends JFrame{
 			return;
 		
 		
-		nomRobot = (String)JOptionPane.showInputDialog(null,"Entrez le nom du robot telecommande:","Nom Robot",JOptionPane.QUESTION_MESSAGE,null,null,"glaedr");
+		numRobot = JOptionPane.showOptionDialog(null,choixTel,"Robot telecommande",JOptionPane.DEFAULT_OPTION,JOptionPane.PLAIN_MESSAGE,null,null,nomRobots[0]);
+		nomRobot = (String) choixTel.getSelectedItem();
 		if(nomRobot == null) 
 			return;
-		addrRobot = (String)JOptionPane.showInputDialog(null,"Entrez l'addresse bluetooth du robot telecommande :","Addr Bluetooth",JOptionPane.QUESTION_MESSAGE,null,null,"00:16:53:1C:15:FC");
+		addrRobot = addrRobots[choixTel.getSelectedIndex()];
 		if(addrRobot == null) 
 			return;
 
 	    robt = new Robot_bt(addrRobot, nomRobot);
 	    robt.setMessage("tel");
 		
-	    nomRobot = (String)JOptionPane.showInputDialog(null,"Entrez le nom du robot autonome:","Nom Robot",JOptionPane.QUESTION_MESSAGE,null,null,"Firnen");
-		addrRobot = (String)JOptionPane.showInputDialog(null,"Entrez l'addresse bluetooth du robot autonome:","Addr Bluetooth",JOptionPane.QUESTION_MESSAGE,null,null,"00:16:53:16:2E:5B");
-		
+	    numRobot = JOptionPane.showOptionDialog(null,choixTel,"Robot Autonome",JOptionPane.DEFAULT_OPTION,JOptionPane.PLAIN_MESSAGE,null,null,nomRobots[0]);
+		nomRobot = (String) choixTel.getSelectedItem();
+		if(nomRobot == null) 
+			return;
+		addrRobot = addrRobots[choixTel.getSelectedIndex()];
+		if(addrRobot == null) 
+			return;
 		
 		rob_autonome = new Robot_bt(addrRobot,nomRobot);
 		rob_autonome.setMessage("auto");
