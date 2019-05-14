@@ -27,6 +27,7 @@ public class Robot {
 	private String message;
 	private volatile Boolean newMessage;
 	public Boolean simu;
+	private int nbMouvs;
 	
 	public String getMessage() {
 		return message;
@@ -56,6 +57,7 @@ public class Robot {
 		this.newMessage = false;
 		//Changer si pas simu
 		simu = true;
+		nbMouvs = 0;
 	}
 
 	@Override
@@ -139,6 +141,7 @@ public class Robot {
 				}
 			}
 			carte.updateCarte(plat);
+			nbMouvs++;
 			return 1;
 		}
 		else {
@@ -182,6 +185,7 @@ public class Robot {
 			
 			
 			carte.updateCarte(plat);
+			nbMouvs++;
 			return 1;
 		}
 		else {
@@ -274,6 +278,9 @@ public class Robot {
 			traiterCommande("r");	
 	}
 	
+	public int getNbMouvs() {
+		return nbMouvs;
+	}
 
 }
 
