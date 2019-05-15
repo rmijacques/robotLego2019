@@ -92,7 +92,6 @@ public class Carte extends JPanel implements ActionListener{
 			c.setHopital("");
 			c.prendrePatient();
 		}
-		System.out.println(plat.getGp().toString());
 		updateCarte(plat);
 	}
 	

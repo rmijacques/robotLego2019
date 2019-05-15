@@ -38,8 +38,6 @@ public class IADeuxRobots implements Runnable {
 		this.plat = plat;
 		this.log = log;
 		this.doNothing = false;
-		for(Case c : plat.getVictimes())
-			System.out.println(c.toStringSimpl());
 	}
 	
 	public void run() {
@@ -69,8 +67,6 @@ public class IADeuxRobots implements Runnable {
 					rAutonome.traiterCommande(instructionRobotAutonome);
 				}
 				if(destinationRobAuto.equals(rAutonome.getPosition())) {
-					for(Case c : plat.getVictimes())
-						System.out.println(c.toStringSimpl());
 					rAutonome.pick();
 				}
 				if(rAutonome.getPosition().hasHopital() && rAutonome.getNbVictime()> 0)
@@ -103,7 +99,6 @@ public class IADeuxRobots implements Runnable {
 							e.printStackTrace();
 						}
 						if(plat.getVictimes().size() == 0 && rAutonome.getNbVictime() == 0) {
-							System.out.println("break");
 							break;
 						}
 					}
@@ -239,7 +234,6 @@ public class IADeuxRobots implements Runnable {
 		try {
 			if(rTelecommande.getNbVictime() == 0 && plat.getVictimes().size() > 0) {
 				synchronized(plat) {
-					System.out.println("j'attends");
 					plat.wait();
 				}
 			}
@@ -330,7 +324,6 @@ public class IADeuxRobots implements Runnable {
 			
 			if(meilRech == null || (rech.getPileMin() < meilRech.getPileMin())) {
 				ret.setChemin(chemin);
-				System.out.println("chemin ="+chemin);
 				ret.setDest(c);
 				meilRech = rech;
 			}

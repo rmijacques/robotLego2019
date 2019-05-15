@@ -37,7 +37,6 @@ public class Plateau {
 			cases[c.getX()][c.getY()] = c;
 		}
 		gp = new GraphePlateau(l,h,cases);
-		System.out.println(gp.toString());
 		
 		nbPatients = 0;
 		hauteur = h;
