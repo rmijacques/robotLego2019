@@ -49,7 +49,6 @@ public class Main extends JFrame{
 		String [] addrRobots = {"00:16:53:1C:15:FC","00:16:53:16:2E:5B","00:16:53:16:13:88","","00:16:53:1C:19:95"};
 		JComboBox<String> choixTel = new JComboBox<>(nomRobots);
 		
-		
 		int width;
 		int height;
 		String ligneCarte;
@@ -57,7 +56,7 @@ public class Main extends JFrame{
 		List<Case> lcases = new ArrayList<>();
 		String nomRobot;
 		String addrRobot;
-		int numRobot;
+
 		
 		nomFich = (String)JOptionPane.showInputDialog(null,"Entrez le fichier de la carte :","Carte",JOptionPane.QUESTION_MESSAGE,null,null,"5X5FATTEST.txt");
 		fichCarte = new File("./cartesTest/"+nomFich);
@@ -65,8 +64,7 @@ public class Main extends JFrame{
 		if(nomFich == null) 
 			return;
 		
-		
-		numRobot = JOptionPane.showOptionDialog(null,choixTel,"Robot telecommande",JOptionPane.DEFAULT_OPTION,JOptionPane.PLAIN_MESSAGE,null,null,nomRobots[0]);
+		JOptionPane.showOptionDialog(null,choixTel,"Robot telecommande",JOptionPane.DEFAULT_OPTION,JOptionPane.PLAIN_MESSAGE,null,null,nomRobots[0]);
 		nomRobot = (String) choixTel.getSelectedItem();
 		if(nomRobot == null) 
 			return;
@@ -77,8 +75,9 @@ public class Main extends JFrame{
 	    robt = new Robot_bt(addrRobot, nomRobot);
 	    robt.setMessage("tel");
 		
-	    numRobot = JOptionPane.showOptionDialog(null,choixTel,"Robot Autonome",JOptionPane.DEFAULT_OPTION,JOptionPane.PLAIN_MESSAGE,null,null,nomRobots[0]);
+	    JOptionPane.showOptionDialog(null,choixTel,"Robot Autonome",JOptionPane.DEFAULT_OPTION,JOptionPane.PLAIN_MESSAGE,null,null,nomRobots[0]);
 		nomRobot = (String) choixTel.getSelectedItem();
+		
 		if(nomRobot == null) 
 			return;
 		addrRobot = addrRobots[choixTel.getSelectedIndex()];

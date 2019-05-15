@@ -15,6 +15,7 @@ import userInterface.Logs;
  * @author colloc
  *
  */
+
 public class IADeuxRobots implements Runnable {
 	private volatile Robot rAutonome;
 	private volatile Robot rTelecommande;
@@ -24,6 +25,12 @@ public class IADeuxRobots implements Runnable {
 	Logs log;
 	
 	
+	/**
+	 * @param rAuto : Le robot telecommande
+	 * @param rtel : le robot autonome
+	 * @param plat : le plateau
+	 * @param log : le log pour afficher les informations
+	 */
 	public IADeuxRobots(Robot rAuto,Robot rtel,Plateau plat,Logs log) {
 		hopitaux = plat.trouverCasesHopitaux();
 		this.rAutonome = rAuto;
@@ -34,7 +41,6 @@ public class IADeuxRobots implements Runnable {
 		for(Case c : plat.getVictimes())
 			System.out.println(c.toStringSimpl());
 	}
-	
 	
 	public void run() {
 		Chemin cheminRobAutonome = new Chemin(null,null,null);
@@ -93,7 +99,6 @@ public class IADeuxRobots implements Runnable {
 						try {
 							Thread.sleep(1000);
 						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						if(plat.getVictimes().size() == 0 && rAutonome.getNbVictime() == 0) {
@@ -107,17 +112,10 @@ public class IADeuxRobots implements Runnable {
 		
 	}
 	
-	public String getBestInstructionList(List<Recherche> listeRech) {
-		String best = listeRech.get(0).getInstructionsList();
-		
-		for(Recherche r : listeRech) {
-			if(r.getInstructionsList().length() < best.length())
-				best = r.getInstructionsList();
-		}
-		
-		return best;
-	}
 	
+	/**Dtecte un cas de collision sur la prochain mouvement du robot autonome et l'empeche d'avancer tant qu'il y a collision
+	 * @return true si collision sinon false
+	 */
 	public boolean collisionProchaineCase() {
 		Case prochaineCaseAuto = plat.getNextCase(rAutonome.getPosition(), rAutonome.getDirection());
 		Case prochaineCaseTel = plat.getNextCase(rTelecommande.getPosition(), rTelecommande.getDirection());
@@ -128,7 +126,8 @@ public class IADeuxRobots implements Runnable {
 	}
 
 	/**
-	 * Quand le rob autonome n'a plus de victime à ramasser il doit s'enfuir de l'hopital
+	 * Quand le rob autonome n'a plus de victime à ramasser il doit s'enfuir de l'hopital par le meilleur trajet
+	 * pour ne pas handicaper le robot télécommandé
 	 */
 	private void fuir() {
 		Chemin chemRobotTel;
@@ -223,6 +222,12 @@ public class IADeuxRobots implements Runnable {
 	}
 	
 	
+	/**Traite le case ou l'hopital est sur une case a 3 branche quand le robot télécommandé y va, choisi le mouvement à faire pour que l'entrée dans la case soit optimale par rapport au prochain objectif
+	 * @param cActuelle
+	 * @param cHopital
+	 * @param orActuelle
+	 * @return
+	 */
 	public String destHopitalCase3Branches(Case cActuelle,Case cHopital,Orientation orActuelle) {
 		Chemin chemRobotTel;
 		List<CaseOrientation> parcours;
@@ -332,18 +337,13 @@ public class IADeuxRobots implements Runnable {
 		return ret;
 	}
 	
+
 	
-	public CaseOrientation trouverCollision(List<CaseOrientation> parcoursTel,List<CaseOrientation> parcoursAuto) {
-		int i =0;
-		while(i < parcoursTel.size() && i < parcoursAuto.size()) {
-			if(parcoursAuto.get(i).getC().equals(parcoursTel.get(i).getC()))
-				return parcoursAuto.get(i);
-
-			++i;
-		}
-		return null;
-	}
-
+	/**Renvoi la prochaine case apres un mouvement et une orientation
+	 * @param leftOrRight : true si on tourne à gauche false si on tourne à droite
+	 * @param caseOr :CaseOrientation avant le mouvement
+	 * @return la case après le mouvement
+	 */
 	public Case nextCase(boolean leftOrRight, CaseOrientation caseOr) {
         Orientation orienTemp;
         Case caseTemp;
@@ -356,10 +356,5 @@ public class IADeuxRobots implements Runnable {
         caseTemp = plat.getNextCase(caseTemp, orienTemp);
         return caseTemp;
     }
-
-//	public List<String> mouvEffectues(){
-//		return tousLesMouvs;
-//	}
-
 	
 }
