@@ -58,7 +58,6 @@ public class IADeuxRobots implements Runnable {
 			if(rAutonome.getNbVictime() < 2 && plat.getVictimes().size() > 0) {
 				cheminRobAutonome = trouverPlusProcheVictime(rAutonome.getPosition(), rAutonome.getDirection(),null);
 				cheminRobAutonome = memeVictime(cheminRobAutonome, cheminRobTelecommande);
-				//cheminRobAutonome = eviterCollison(cheminRobAutonome, cheminRobTelecommande);
 				destinationRobAuto = cheminRobAutonome.getDest();
 				if(destinationRobAuto.equals(prochaineCaseAuto) && !destinationRobAuto.isCase2()) {
 					instructionRobotAutonome = destVictimeCase3Branches(rAutonome.getPosition(), prochaineCaseAuto, rAutonome.getDirection(),"");
@@ -74,6 +73,8 @@ public class IADeuxRobots implements Runnable {
 						System.out.println(c.toStringSimpl());
 					rAutonome.pick();
 				}
+				if(rAutonome.getPosition().hasHopital() && rAutonome.getNbVictime()> 0)
+					rAutonome.drop();
 				
 				
 			}
