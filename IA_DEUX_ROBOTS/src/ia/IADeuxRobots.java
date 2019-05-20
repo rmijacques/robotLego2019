@@ -109,7 +109,7 @@ public class IADeuxRobots implements Runnable {
 	}
 	
 	
-	/**Dtecte un cas de collision sur la prochain mouvement du robot autonome et l'empeche d'avancer tant qu'il y a collision
+	/**Detecte un cas de collision sur la prochain mouvement du robot autonome et l'empeche d'avancer tant qu'il y a collision
 	 * @return true si collision sinon false
 	 */
 	public boolean collisionProchaineCase() {
@@ -134,8 +134,10 @@ public class IADeuxRobots implements Runnable {
 		Case positionAuto = rAutonome.getPosition();
 		Case nextCaseAuto = plat.getNextCase(rAutonome.getPosition(), rAutonome.getDirection());
 		
+		chemRobotTel = trouverPlusProcheHopital(rTelecommande.getPosition(), rTelecommande.getDirection());
+		
 		try {
-			if(rTelecommande.getNbVictime() == 0 && plat.getVictimes().size() > 0) {
+			if(rTelecommande.getNbVictime() == 0 && plat.getVictimes().size() > 0 && chemRobotTel.getDest().equals(nextCaseAuto)) {
 				synchronized(plat) {
 					plat.wait();
 				}
@@ -144,7 +146,7 @@ public class IADeuxRobots implements Runnable {
 			e.printStackTrace();
 		}
 		
-		chemRobotTel = trouverPlusProcheHopital(rTelecommande.getPosition(), rTelecommande.getDirection());
+		
 		Collections.addAll(listeInst , chemRobotTel.getChemin().split("\n"));
 		parcours = casesParcouruesEtOrientations(listeInst, rTelecommande.getPosition(), rTelecommande.getDirection(), rTelecommande);
 		avantCollision = parcours.get(parcours.size()-2).getC();
@@ -229,10 +231,11 @@ public class IADeuxRobots implements Runnable {
 		List<CaseOrientation> parcours;
 		List<String> listeInst = new ArrayList<>();
 		Case avantCollisionTel;
+		Case destTel = (trouverPlusProcheHopital(rTelecommande.getPosition(), rTelecommande.getDirection())).getDest();
 		
 		
 		try {
-			if(rTelecommande.getNbVictime() == 0 && plat.getVictimes().size() > 0) {
+			if(rTelecommande.getNbVictime() == 0 && plat.getVictimes().size() > 0 && destTel.equals(cHopital)) {
 				synchronized(plat) {
 					plat.wait();
 				}
@@ -289,16 +292,17 @@ public class IADeuxRobots implements Runnable {
 		String chemin;
 		Chemin ret = new Chemin(caseDepart,null,null);
 		Recherche rech;
-		
-		for(Case c:plat.getVictimes()) {
-			if(notDis == null || !c.equals(notDis)) {
-				rech = new Recherche(plat, caseDepart, c, orientDepart);
-				chemin = rech.getInstructionsList();
-				
-				if(meilRech == null || (rech.getPileMin() <= meilRech.getPileMin())) {
-					ret.setChemin(chemin);
-					ret.setDest(c);
-					meilRech = rech;
+		synchronized(plat) {
+			for(Case c:plat.getVictimes()) {
+				if(notDis == null || !c.equals(notDis)) {
+					rech = new Recherche(plat, caseDepart, c, orientDepart);
+					chemin = rech.getInstructionsList();
+					
+					if(meilRech == null || (rech.getPileMin() <= meilRech.getPileMin())) {
+						ret.setChemin(chemin);
+						ret.setDest(c);
+						meilRech = rech;
+					}
 				}
 			}
 		}
@@ -341,6 +345,7 @@ public class IADeuxRobots implements Runnable {
 	public Case nextCase(boolean leftOrRight, CaseOrientation caseOr) {
         Orientation orienTemp;
         Case caseTemp;
+        
         if(leftOrRight)
             orienTemp = Orientation.nouvOrientApresMouv(caseOr.getOri(), "l", caseOr.getC().getTypeImage());
         else            

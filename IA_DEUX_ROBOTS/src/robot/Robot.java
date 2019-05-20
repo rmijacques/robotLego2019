@@ -56,7 +56,7 @@ public class Robot {
 		this.message = "";
 		this.newMessage = false;
 		//Changer si pas simu
-		simu = true;
+		simu = false;
 		nbMouvs = 0;
 	}
 
