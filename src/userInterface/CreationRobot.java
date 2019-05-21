@@ -12,6 +12,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import connexionCommunication.ClientUdp;
+import connexionCommunication.LogRobot;
 import connexionCommunication.Robot_bt;
 import plateau.Case;
 import plateau.Plateau;
@@ -35,15 +37,14 @@ public class CreationRobot extends JInternalFrame implements ActionListener{
 	Controller controller;
 	GestionRobots gestionRobots;
 	Robot_bt robt;
-
-	
+	Robot_bt robot_autonome;
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -7039655929210412344L;
 
-	public CreationRobot(Plateau plat,Logs log,Carte carte,GestionRobots gr,Robot_bt robt) {
+	public CreationRobot(Plateau plat,Logs log,Carte carte,GestionRobots gr,Robot_bt robt,Robot_bt robot_autonome) {
 		super("Nouveau Robot");
 		Orientation []ori = {Orientation.EAST,Orientation.WEST,Orientation.NORTH,Orientation.SOUTH};
 		JLabel jLBNom = new JLabel("Nom du robot :");
@@ -56,6 +57,7 @@ public class CreationRobot extends JInternalFrame implements ActionListener{
 		this.plateau = plat;
 		this.controller = gr.controller;
 		this.robt = robt;
+		this.robot_autonome = robot_autonome;
 		this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.X_AXIS));
 
 		jPanelConteneurCrea = new JPanel();
@@ -67,15 +69,16 @@ public class CreationRobot extends JInternalFrame implements ActionListener{
 		jTFAddresseBluetooth = new JTextField();
 		jTFNomRobot = new JTextField();
 
+		jTFNomRobot.setText("Glaedr");
 		
 		
-		jBAjouterRobot = new JButton("ajouter robot bluetooth");
+		jBAjouterRobot = new JButton("ajouter robot telecommande");
 		jBAjouterRobot.addActionListener(this);
-		jBAjouterRobot.setActionCommand("robBlue");
+		jBAjouterRobot.setActionCommand("robTele");
 		
-		jBAjouterRobotTelecommande = new JButton("ajouter robot telecommande");
+		jBAjouterRobotTelecommande = new JButton("ajouter robot autonome");
 		jBAjouterRobotTelecommande.addActionListener(this);
-		jBAjouterRobotTelecommande.setActionCommand("robSim");
+		jBAjouterRobotTelecommande.setActionCommand("robAuto");
 		
 		jPanelConteneurCrea.add(jLBNom);
 		jPanelConteneurCrea.add(jTFNomRobot);
@@ -86,6 +89,7 @@ public class CreationRobot extends JInternalFrame implements ActionListener{
 		jPanelConteneurCrea.add(jTFXDepart);
 		jPanelConteneurCrea.add(jCBOrientation);
 		jPanelConteneurCrea.add(jBAjouterRobotTelecommande);
+		jPanelConteneurCrea.add(jBAjouterRobot);
 
 		add(jPanelConteneurCrea);
 		
@@ -101,40 +105,44 @@ public class CreationRobot extends JInternalFrame implements ActionListener{
 		int x;
 		int y;
 		Case cas;
-		Robot rbt;
+		Robot robotTelecommande;
+		Robot robotAuto;
+		String messageBcast;
 		
 		//création d'un nouveau robot simulé dans le logiciel, MAJ de la carte
 		switch (e.getActionCommand()) {
-		case "robSim":
+		case "robAuto":
 			nom = jTFNomRobot.getText();
 			orient = (Orientation) jCBOrientation.getSelectedItem();
 			x = Integer.parseInt(jTFXDepart.getText());
 			y = Integer.parseInt(jTFYDepart.getText());
 			cas = plateau.getCaseByCoordinates(x, y);
 			
-			rbt = new Robot(nom,cas,orient,plateau,carte,log,robt);
-			
+			robotAuto = new Robot(nom,cas,orient,plateau,carte,log,robot_autonome);
+			robot_autonome.setRobotReception(robotAuto);
 			cas.setRobot("R"+orient.toString());
 			
-			controller.setRobot(rbt);
-			log.addEvent("Nouveau Robot :"+rbt.toString());
+			controller.setRobotAutonome(robotAuto);
+			log.addEvent("Nouveau Robot :"+robotAuto.toString());
 			carte.updateCarte(plateau);
+			messageBcast = LogRobot.construireMessageLog(robotAuto,"");
+			new Thread(new ClientUdp(messageBcast)).start();
 			dispose();
 			break;
 			
-		case "robBlue":
+		case "robTele":
 			nom = jTFNomRobot.getText();
 			orient = (Orientation) jCBOrientation.getSelectedItem();
 			x = Integer.parseInt(jTFXDepart.getText());
 			y = Integer.parseInt(jTFYDepart.getText());
 			cas = plateau.getCaseByCoordinates(x, y);
 			
-			rbt = new Robot(nom,cas,orient,plateau,carte,log,robt);
-			
+			robotTelecommande = new Robot(nom,cas,orient,plateau,carte,log,robt);
+			robt.setRobotReception(robotTelecommande);
 			cas.setRobot("R"+orient.toString());
 			
-			controller.setRobot(rbt);
-			log.addEvent("Nouveau Robot :"+rbt.toString());
+			controller.setRobotTelecommande(robotTelecommande);
+			log.addEvent("Nouveau Robot :"+robotTelecommande.toString());
 			carte.updateCarte(plateau);
 			dispose();
 			break;

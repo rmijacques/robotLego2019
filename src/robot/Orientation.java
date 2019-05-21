@@ -3,10 +3,20 @@ package robot;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author JACQUES Rémi
+ *
+ */
 public enum Orientation {
 	EAST,WEST,NORTH,SOUTH;
 	
 	
+	/**
+	 * @param orient : orientation de départ du robot
+	 * @param mouv : mouvement à effectuer
+	 * @param typeCase : type de la case dans laquelle effectuer le mouvement
+	 * @return nouvelle orientation après le mouvement mouv
+	 */
 	public static Orientation nouvOrientApresMouv(Orientation orient,String mouv,String typeCase) {
 		switch(mouv) {
 		case "l":
@@ -34,7 +44,7 @@ public enum Orientation {
 			else if ((typeCase.equals("GH") && orient == EAST)|| (typeCase.equals("HD")&& orient == SOUTH)  
 					|| (typeCase.equals("DB")&& orient == WEST) || (typeCase.equals("GB")&& orient == NORTH))
 				return leftTurn(orient);
-				return orient;
+			return orient;
 		case "u":
 			return UTurn(orient,typeCase);
 		default :
@@ -42,6 +52,11 @@ public enum Orientation {
 		}
 	}
 	
+	/**
+	 * @param orient : orientation avant le Uturn
+	 * @param typeCase : type de la case dans laquelle effectuer le UTurn
+	 * @return nouvelle orientation après un Uturn
+	 */
 	public static Orientation UTurn(Orientation orient,String typeCase) {
 		List<String> tpCasesPoss = new ArrayList<>();
 		for(Orientation o : Orientation.values()) {
@@ -54,25 +69,13 @@ public enum Orientation {
 			}	
 		}
 		return null;
-		
-		
 	}
 	
-	public static Orientation opposite(Orientation orient) {
-		switch(orient) {
-		case EAST:
-			return WEST;
-		case SOUTH:
-			return NORTH;
-		case WEST:
-			return EAST;
-		case NORTH:
-			return SOUTH;
-		default :
-			return null;
-		}
-	}
 	
+	/**
+	 * @param orient : Orientation avant un virage à gauche
+	 * @return oriantation après un virage à gauche
+	 */
 	public static Orientation leftTurn(Orientation orient) {
 		switch(orient) {
 		case EAST:
@@ -89,6 +92,10 @@ public enum Orientation {
 		
 	}
 	
+	/**
+	 * @param orient : Orientation avant un virage à droite
+	 * @return oriantation après un virage à droite
+	 */
 	public static Orientation rightTurn(Orientation orient) {
 		switch(orient) {
 		case EAST:
@@ -104,6 +111,11 @@ public enum Orientation {
 		}
 	}
 	
+	
+	/**
+	 * @param ori: Orientation à vérifier
+	 * @return une liste de cases ou il est possible d'avoir l'orientation ori
+	 */
 	public static List<String> typeCasesPourOrient(Orientation ori){
 		List<String> ret = new ArrayList<>();
 		
@@ -146,5 +158,21 @@ public enum Orientation {
 			break;
 		}
 		return ret;
+	}
+	
+	public static Orientation stringToOrient(String str) {
+		System.out.println(str);
+		
+		if(str.contains("EAST"))
+			return Orientation.EAST;
+		if(str.contains("NORTH"))
+			return Orientation.NORTH;
+		if(str.contains("WEST"))
+			return Orientation.WEST;
+		if(str.contains("SOUTH"))
+			return Orientation.SOUTH;
+	
+		return Orientation.EAST;
+		
 	}
 }

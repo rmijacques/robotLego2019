@@ -12,6 +12,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import ia.IADeuxRobots;
+import plateau.Plateau;
 import robot.Robot;
 
 public class Controller extends JPanel implements ActionListener{
@@ -27,17 +29,21 @@ public class Controller extends JPanel implements ActionListener{
 	JButton pick;
 	JButton drop;
 	JButton IA;
+	JButton compt;
 	JLabel control;
-	Robot rob;
+	Robot robotTelecommande;
+	Robot robotAutonome;
+	Plateau plat;
 	
 	
 	
-	public Controller(Logs log) {
+	public Controller(Logs log,Plateau plat) {
 		super();
 		this.log = log;
+		this.plat =plat;
 		
-		setLayout(new GridLayout(5,3));
-		setMaximumSize(new Dimension(150,200));
+		setLayout(new GridLayout(7,3));
+		setMaximumSize(new Dimension(150,350));
 		up = new JButton("",new ImageIcon("./imagesDirections/up.png"));
 		down = new JButton("",new ImageIcon("./imagesDirections/down.png"));
 		left = new JButton("",new ImageIcon("./imagesDirections/left.png"));
@@ -46,6 +52,7 @@ public class Controller extends JPanel implements ActionListener{
 		drop = new JButton("",new ImageIcon("./imagesDirections/drop.png"));
 		IA = new JButton("IA");
 		control = new JLabel("Controlle :");
+		compt = new JButton("Ct");
 		
 		up.setPreferredSize(new Dimension(50,50));
 		right.setPreferredSize(new Dimension(50,50));
@@ -55,6 +62,7 @@ public class Controller extends JPanel implements ActionListener{
 		pick.setPreferredSize(new Dimension(50,50));
 		drop.setPreferredSize(new Dimension(50,50));
 		IA.setPreferredSize(new Dimension(50,50));
+		compt.setPreferredSize(new Dimension(50,50));
 		
 		up.setActionCommand("up");
 		right.setActionCommand("right");
@@ -63,6 +71,7 @@ public class Controller extends JPanel implements ActionListener{
 		pick.setActionCommand("pick");
 		drop.setActionCommand("drop");
 		IA.setActionCommand("ia");
+		compt.setActionCommand("compt");
 		
 		up.addActionListener(this);
 		down.addActionListener(this);
@@ -71,6 +80,7 @@ public class Controller extends JPanel implements ActionListener{
 		pick.addActionListener(this);
 		drop.addActionListener(this);
 		IA.addActionListener(this);
+		compt.addActionListener(this);
 		
 		add(Box.createRigidArea(new Dimension(50,50)));
 		add(up);
@@ -92,46 +102,68 @@ public class Controller extends JPanel implements ActionListener{
 		add(IA);
 		add(drop);
 		
+		add(Box.createRigidArea(new Dimension(50,50)));
+		add(Box.createRigidArea(new Dimension(50,50)));
+		add(Box.createRigidArea(new Dimension(50,50)));
+		
+		add(Box.createRigidArea(new Dimension(50,50)));
+		add(compt);
+		add(Box.createRigidArea(new Dimension(50,50)));
+		
 		setVisible(true);
 	}
 	
-	public void setRobot(Robot r) {
-		this.rob = r;
+	public void setRobotTelecommande(Robot r) {
+		this.robotTelecommande = r;
+	}
+	
+	public void setRobotAutonome(Robot r) {
+		this.robotAutonome = r;
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()){
 			case "up":
 				log.addEvent("User wants to go STRAIGHT");
-				rob.bouger("s");
+				robotTelecommande.traiterCommande("s");
 				break;
 			case "down" :
 				log.addEvent("User wants to go UTURN");
-				rob.bouger("u");
+				robotTelecommande.traiterCommande("u");
 				break;
 			case "left":
 				log.addEvent("User wants to go LEFT");
-				rob.bouger("l");
+				robotTelecommande.traiterCommande("l");
 				break;
 			case "right" :
 				log.addEvent("User wants to go RIGHT");
-				rob.bouger("r");
+				robotTelecommande.traiterCommande("r");
 				break;
 			case "pick":
 				log.addEvent("User wants to PICK a patient");
-				rob.pick();
+				robotTelecommande.pick();
 				break;
 			case "drop":
 				log.addEvent("User wants to DROP a patient");
-				rob.drop();
+				robotTelecommande.drop();
 				break;
 			case "ia" :
 				log.addEvent("Yehaw");
-				rob.ia();
+				IADeuxRobots deuxRobs = new IADeuxRobots(robotAutonome, robotTelecommande, plat, log);
+				new Thread(deuxRobs).start();
+			case "compt" :
+				log.addEvent("\nNomdre de mouvements :");
+				log.addEvent("Telecommande : "+robotTelecommande.getNbMouvs());
+				log.addEvent("Autonome : "+robotAutonome.getNbMouvs());
+				log.addEvent("Total : "+(robotAutonome.getNbMouvs() + robotTelecommande.getNbMouvs()));
 			default:
 				;
 			
 		}
 		
+	}
+	
+	public void setPlateau(Plateau plat) {
+		this.plat =plat;
 	}
 }

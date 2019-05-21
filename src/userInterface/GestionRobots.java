@@ -23,16 +23,18 @@ public class GestionRobots extends JPanel implements ActionListener{
 	Robot robot;
 	Controller controller;
 	Robot_bt robt;
+	Robot_bt robot_autonome;
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2322333442101325893L;
 
-	public GestionRobots(Logs log,Controller controller,Plateau plat,Carte carte,Robot_bt robt) {
+	public GestionRobots(Logs log,Controller controller,Plateau plat,Carte carte,Robot_bt robt,Robot_bt robot_autonome) {
 		this.carte = carte;
 		this.plateau = plat;
 		this.log = log;
 		this.robt = robt;
+		this.robot_autonome = robot_autonome;
 		this.controller = controller;
 		scrollPaneConteneurLogs = new JScrollPane(log);
 		scrollPaneConteneurLogs.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -60,7 +62,7 @@ public class GestionRobots extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		String com = e.getActionCommand();
 		if(com.equals("nouvRob"))
-			add(new CreationRobot(plateau,log,carte,this,robt));
+			add(new CreationRobot(plateau,log,carte,this,robt,robot_autonome));
 	}
 	
 	public void setRob(Robot r) {

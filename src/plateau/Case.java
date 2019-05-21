@@ -1,16 +1,26 @@
 package plateau;
 
+/**
+ * @author Rémi Jacques
+ *
+ */
 public class Case implements Comparable<Case>{
-	String typeImage;
-	String patient;
-	String hopital;
-	String robot;
-	int x;
-	int y;
+	private String typeImage;
+	private String patient;
+	private String hopital;
+	private String robot;
+	private int x;
+	private int y;
 	
 
-	//TODO : ajouter a robot et changer pour l'affichage etc
+
 	
+	/**
+	 * @param typeImage Le type de la case, pour voir les différents types voir <a target="_blank" rel="noopener noreferrer" href="https://github.com/zebest321/robotLego2019/tree/master/imagesCases">ici</a>.
+	 * @param x La position x de la case dans le graphe.
+	 * @param y La position y de la case dans le graphe.
+	 * @see <a target="_blank" rel="noopener noreferrer" href="https://github.com/zebest321/robotLego2019/tree/master/imagesCases">Types d'images.</a>
+	 */
 	public Case(String typeImage, int x, int y) {
 		this.typeImage = typeImage;
 		this.x = x;
@@ -20,6 +30,7 @@ public class Case implements Comparable<Case>{
 		robot = "";
 	}
 	
+
 	public boolean equals(Object o) {
 		Case c = (Case)o;
 		if(getX() == c.getX() && getY() == c.getY())
@@ -30,18 +41,24 @@ public class Case implements Comparable<Case>{
 
 	
 	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return "Case [typeImage=" + typeImage + ", patient=" + patient + ", hopital=" + hopital + ", x=" + x + ", y="
-				+ y + "]";
+		return "Case [typeImage=" + typeImage + ", patient=" + patient + ", hopital=" + hopital + ", x=" + y + ", y="
+				+ x + "]";
 	}
 	
+	/**
+	 * @return Ne renvoie que les coordonnées x et y.
+	 */
 	public String toStringSimpl() {
-		return "("+x+" , "+y+")";
+		return "("+y+" , "+x+")";
 	}
 
 	public int compareTo(Case c) {
-
 		if(x > c.getX())
 			return 1;
 		else if(x < c.getX())
@@ -53,10 +70,16 @@ public class Case implements Comparable<Case>{
 		return 0;
 	}
 	
+	/**
+	 * @return Renvoie vrai si un patient est présent dans la case.
+	 */
 	public boolean hasPatient() {
 		return !patient.equals("");
 	}
 	
+	/**
+	 * @return Renvoie vrai si un hôpital est présent dans la case.
+	 */
 	public boolean hasHopital() {
 		return !hopital.equals("");
 	}
@@ -69,24 +92,17 @@ public class Case implements Comparable<Case>{
 		return y;
 	}
 
-	public void setTypeImage(String typeImage) {
-		this.typeImage = typeImage;
-	}
 
-	public void setX(int x) {
-		this.x = x;
-	}
-
-	public void setY(int y) {
-		this.y = y;
-	}
-	
 	public String getPatient() {
 		return patient;
 	}
 
-	public void setPatient(String patient) {
-		this.patient = patient;
+	public void prendrePatient() {
+		patient = "";
+	}
+	
+	public void addPatient() {
+		patient = "patients/";
 	}
 
 	public String getHopital() {

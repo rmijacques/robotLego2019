@@ -5,20 +5,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * @author Rémi Jacques
+ *
+ */
 public class GraphePlateau {
-	int h;
-	int l;
-	Case[][] cases;
+	private int h;
+	private int l;
+	private Case[][] cases;
 	private Map<Case, List<Case>> graphe;
 	
-	public Map<Case, List<Case>> getGraphe() {
-		return graphe;
-	}
 
-	public void setGraphe(Map<Case, List<Case>> graphe) {
-		this.graphe = graphe;
-	}
-
+	/**
+	 * @param hauteur Hauteur du plateau en cases.
+	 * @param largeur Largeur du plateau en cases.
+	 * @param cases	Matrice des cases qui forment le plateau.
+	 */
 	public GraphePlateau(int hauteur,int largeur,Case[][] cases) {
 		h = hauteur;
 		l = largeur;
@@ -27,7 +29,7 @@ public class GraphePlateau {
 		remplirGraphe();
 	}
 	
-	public void remplirGraphe() {
+	private void remplirGraphe() {
 		Case c;
 		
 		for(int i=0;i<h;i++) {
@@ -38,7 +40,7 @@ public class GraphePlateau {
 		}
 	}
 	
-	public List<Case> trouverVoisins(int i,int j){
+	private List<Case> trouverVoisins(int i,int j){
 		Case c = cases[i][j];
 		Case vois;
 		List<Case> listVois = new ArrayList<>();
@@ -72,5 +74,17 @@ public class GraphePlateau {
 		}
 		return ret;
 	}
+	
+	/**
+	 * @return Renvoie le graphe sous forme de Treemap.
+	 * @see Map
+	 * @see TreeMap
+	 * @see List
+	 * @see Case 
+	 */
+	public Map<Case, List<Case>> getGraphe() {
+		return graphe;
+	}
+
 	
 }

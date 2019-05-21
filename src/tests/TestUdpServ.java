@@ -21,14 +21,14 @@ import userInterface.Controller;
 import userInterface.GestionRobots;
 import userInterface.Logs;
 
-public class Main extends JFrame{
+public class TestUdpServ extends JFrame{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2887664613212914716L;
 
 
-	public Main() {
+	public TestUdpServ() {
 		super("Robot Lego");
 		this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.X_AXIS));
 	}

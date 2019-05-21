@@ -21,14 +21,14 @@ import userInterface.Controller;
 import userInterface.GestionRobots;
 import userInterface.Logs;
 
-public class Main extends JFrame{
+public class TestUdpClient extends JFrame{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2887664613212914716L;
 
 
-	public Main() {
+	public TestUdpClient() {
 		super("Robot Lego");
 		this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.X_AXIS));
 	}
@@ -116,9 +116,7 @@ public class Main extends JFrame{
 		ctrl= new Controller(log,plat);
 
 		gr = new GestionRobots(log,ctrl,plat,carte,robt,rob_autonome);
-		
-		server = new Thread(new ServerUdp(plat,carte,log));
-		server.start();
+
 		
 		frame.getContentPane().add(gr);
 		frame.getContentPane().add(Box.createHorizontalStrut(10));
