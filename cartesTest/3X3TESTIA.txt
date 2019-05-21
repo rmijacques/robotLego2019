@@ -1,5 +1,0 @@
-3
-3
-DB GDB GB
-HDB GHB HB
-HD GHD GH
