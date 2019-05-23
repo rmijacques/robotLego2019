@@ -34,7 +34,6 @@ public class Robot_bt {
 		try {
 			cn = new Connexion(addr, name);
 		} catch (NXTCommException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		DataIn = cn.getDataIn();

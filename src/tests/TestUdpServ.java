@@ -29,7 +29,8 @@ public class TestUdpServ extends JFrame{
 
 
 	public TestUdpServ() {
-		super("Robot Lego");
+		super("Robot Lego - Serveur");
+		this.setTitle("Serveur");
 		this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.X_AXIS));
 	}
 	

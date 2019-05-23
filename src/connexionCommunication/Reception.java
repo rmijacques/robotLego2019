@@ -12,8 +12,7 @@ public class Reception implements Runnable {
 		this.rob = r;
 		this.input = in;
 	}
-	//TODO: Ameliorer le caca ici présent qui marche ap
-	//TODO: Ameliorer le caca ici présent qui marche ap
+
 	public void run() {
 		String message;
 		while(true) {

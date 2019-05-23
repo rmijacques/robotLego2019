@@ -1,6 +1,8 @@
 package robot;
 
 import java.util.List;
+import connexionCommunication.ClientUdp;
+import connexionCommunication.LogRobot;
 import connexionCommunication.Robot_bt;
 import plateau.Case;
 import plateau.Plateau;
@@ -15,9 +17,13 @@ import userInterface.Logs;
  */
 
 
+//TODO: AJOUTER LA SYNCHRO POUR LES UTURN, PRENDRE ET DEPOSER
+
 public class Robot {
 	private volatile Plateau plat;
 	private Carte carte;
+	private int id;
+	private boolean distant;
 	private String nom;
 	private Logs log;
 	private Robot_bt robBluetooth;
@@ -28,6 +34,7 @@ public class Robot {
 	private volatile Boolean newMessage;
 	public Boolean simu;
 	private int nbMouvs;
+
 	
 	public String getMessage() {
 		return message;
@@ -44,7 +51,7 @@ public class Robot {
 	 * @param log : Logs
 	 * @param robt : Robot bluetooth lié à ce robot abstrait
 	 */
-	public Robot(String nom,Case depart,Orientation dir,Plateau plat,Carte crt,Logs log,Robot_bt robt) {
+	public Robot(String nom,Case depart,Orientation dir,Plateau plat,Carte crt,Logs log,Robot_bt robt,boolean distant) {
 		nbVictime = 0;
 		position = depart;
 		direction = dir;
@@ -55,8 +62,11 @@ public class Robot {
 		this.robBluetooth = robt;
 		this.message = "";
 		this.newMessage = false;
+		this.distant = distant;
+		this.id = plat.attribuerIdRobot(distant);
+
 		//Changer si pas simu
-		simu = false;
+		simu = true;
 		nbMouvs = 0;
 	}
 
@@ -121,7 +131,6 @@ public class Robot {
 			try {
 				Thread.sleep(30);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -136,7 +145,6 @@ public class Robot {
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -161,10 +169,15 @@ public class Robot {
 	private int traiterMouv(String command,Case caseDest) {
 		Orientation oTemp = Orientation.nouvOrientApresMouv(direction,command,caseDest.getTypeImage());
 		List<String> typeCasesPossibles = Orientation.typeCasesPourOrient(oTemp);
+		String messageBcast;
 		
 		if(typeCasesPossibles.contains(caseDest.getTypeImage())){	
 			log.addEvent("Moving from "+position.toStringSimpl()+" to "+caseDest.toStringSimpl() +" command =" + command);
 			envoyerCommande(command);
+			
+			messageBcast = LogRobot.construireMessageLog(this,"oui");
+			new Thread(new ClientUdp(messageBcast)).start();
+			
 			if(!simu) {
 				while(newMessage == false);
 				newMessage = false;
@@ -173,16 +186,18 @@ public class Robot {
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
+			
+
 
 			direction = oTemp;
 			position.setRobot("");
 			caseDest.setRobot("R"+direction.toString());
 			position = caseDest;
-			
+			messageBcast = LogRobot.construireMessageLog(this,"non");
+			new Thread(new ClientUdp(messageBcast)).start();
 			
 			carte.updateCarte(plat);
 			nbMouvs++;
@@ -281,6 +296,40 @@ public class Robot {
 	public int getNbMouvs() {
 		return nbMouvs;
 	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public boolean equals(Object o) {
+		Robot r = (Robot) o;
+		
+		if(r.getId() == this.id)
+			return true;
+		else 
+			return false;
+	}
+
+
+
+	public void setPosition(Case position) {
+		this.position = position;
+	}
+
+
+
+	public void setDirection(Orientation direction) {
+		this.direction = direction;
+	}
+
+
+
+	public void setNbVictime(int nbVictime) {
+		this.nbVictime = nbVictime;
+	}
+	
+	
+	
 
 }
 

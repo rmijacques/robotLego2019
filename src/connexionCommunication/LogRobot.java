@@ -14,7 +14,7 @@ public class LogRobot {
 	
 	public static String construireMessageLog(Robot r,String mouv) {
 		Date date = new java.util.Date();
-		int idRob = 1; //TODO : rajouter les ID robots
+		int idRob = r.getId();
 		int posL = r.getPosition().getX();
 		int posC = r.getPosition().getY();
 		String mouvement = "mouv="+mouv;
@@ -29,14 +29,15 @@ public class LogRobot {
 		for(String s:infos) {
 			System.out.println("inf "+s);
 		}
-		int idRob = Integer.parseInt(infos[1]); //TODO : rajouter les ID robots
+		int idRob = Integer.parseInt(infos[1]);
 		int posL = Integer.parseInt(infos[2]);
 		int posC = Integer.parseInt(infos[3]);
 		String mouvement = infos[4];
 		String orientation = infos[5];
 		System.out.println(infos[5]);
-		Robot rob = new Robot("raba",plat.getCaseByCoordinates(posL, posC),Orientation.stringToOrient(orientation), plat, crt, log, null);
+		Robot rob = new Robot("dist_"+idRob,plat.getCaseByCoordinates(posL, posC),Orientation.stringToOrient(orientation), plat, crt, log, null,true);
 		
 		return rob;
 	}
+	
 }

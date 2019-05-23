@@ -118,7 +118,7 @@ public class CreationRobot extends JInternalFrame implements ActionListener{
 			y = Integer.parseInt(jTFYDepart.getText());
 			cas = plateau.getCaseByCoordinates(x, y);
 			
-			robotAuto = new Robot(nom,cas,orient,plateau,carte,log,robot_autonome);
+			robotAuto = new Robot(nom,cas,orient,plateau,carte,log,robot_autonome,false);
 			robot_autonome.setRobotReception(robotAuto);
 			cas.setRobot("R"+orient.toString());
 			
@@ -137,13 +137,15 @@ public class CreationRobot extends JInternalFrame implements ActionListener{
 			y = Integer.parseInt(jTFYDepart.getText());
 			cas = plateau.getCaseByCoordinates(x, y);
 			
-			robotTelecommande = new Robot(nom,cas,orient,plateau,carte,log,robt);
+			robotTelecommande = new Robot(nom,cas,orient,plateau,carte,log,robt,false);
 			robt.setRobotReception(robotTelecommande);
 			cas.setRobot("R"+orient.toString());
 			
 			controller.setRobotTelecommande(robotTelecommande);
 			log.addEvent("Nouveau Robot :"+robotTelecommande.toString());
 			carte.updateCarte(plateau);
+			messageBcast = LogRobot.construireMessageLog(robotTelecommande,"");
+			new Thread(new ClientUdp(messageBcast)).start();
 			dispose();
 			break;
 		}

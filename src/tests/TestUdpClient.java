@@ -13,7 +13,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 
 import connexionCommunication.Robot_bt;
-import connexionCommunication.ServerUdp;
 import plateau.Case;
 import plateau.Plateau;
 import userInterface.Carte;
@@ -29,7 +28,8 @@ public class TestUdpClient extends JFrame{
 
 
 	public TestUdpClient() {
-		super("Robot Lego");
+		super("Robot Lego - Client");
+		this.setTitle("Client");
 		this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.X_AXIS));
 	}
 	
@@ -49,7 +49,6 @@ public class TestUdpClient extends JFrame{
 		String [] nomRobots = {"Glaedr","Firnen","Thorn","Saphira","Shruikan"};
 		String [] addrRobots = {"00:16:53:1C:15:FC","00:16:53:16:2E:5B","00:16:53:16:13:88","","00:16:53:1C:19:95"};
 		JComboBox<String> choixTel = new JComboBox<>(nomRobots);
-		Thread server;
 
 		
 		int width;

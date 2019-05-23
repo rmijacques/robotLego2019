@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import robot.Orientation;
+import robot.Robot;
 
 /**
  * @author Rémi Jacques
@@ -16,6 +17,11 @@ public class Plateau {
 	private int largeur;
 	private int nbPatients;
 	private volatile List<Case> victimes;
+	private int nbRobsLocs;
+	private int nbRobsDist;
+
+	private List<Robot> listeRobsDists;
+	private List<Robot> listeRobsLocs;
 	
 	public List<Case> getVictimes() {
 		return victimes;
@@ -42,6 +48,10 @@ public class Plateau {
 		hauteur = h;
 		largeur = l;
 		victimes = trouverCasesVictimes();
+		nbRobsLocs = 0;
+		nbRobsDist = 0;
+		this.listeRobsDists = new ArrayList<>();
+		this.listeRobsLocs = new ArrayList<>();
 	}
 
 	public GraphePlateau getGp() {
@@ -149,5 +159,36 @@ public class Plateau {
 		}
 		return hopitaux;
 	}
+
+	public int attribuerIdRobot(boolean distant) {
+		int temp;
+		if(distant) {
+			temp = nbRobsDist;
+
+			nbRobsDist++;
+		}
+		else {
+
+			temp = nbRobsLocs;
+			nbRobsLocs++;
+		}
+		return temp;
+	}
+	
+	public void ajouterRobot(Robot r,boolean distant) {
+		if(distant) {
+			listeRobsDists.add(r.getId(),r);
+		}
+		else {
+			listeRobsLocs.add(r.getId(),r);
+		}
+	}
+	
+	public Robot getRobById(int num) {
+		return listeRobsDists.get(num);
+	}
+
+	
+	
 }
 
